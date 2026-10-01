@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
@@ -28,13 +29,9 @@ public class SolicitacaoController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<Solicitacao> criarSolicitacao(
-        @RequestBody SolicitacaoRequestDTO solicitacaoDTO){
+        @Valid @RequestBody SolicitacaoRequestDTO solicitacaoDTO){
         try {
-            if(solicitacaoDTO.titulo().isBlank() || solicitacaoDTO.descricao().isBlank() || solicitacaoDTO.categoria() == null){
-                return ResponseEntity.badRequest().build();
-            }
-
-            // Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
+            // TODO: Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
             Long usuarioMockId = 1L;
             Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioMockId);
             return ResponseEntity.ok(solicitacao);
