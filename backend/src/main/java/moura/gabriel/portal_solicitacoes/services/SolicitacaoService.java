@@ -65,5 +65,16 @@ public class SolicitacaoService {
         
         return solicitacaoRepository.save(solicitacao);
     }
+
+    public void excluirSolicitacaoAberta(Long solicitacaoID) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
+            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+        
+        if (solicitacao.getStatus() == Status.ABERTO) {
+            solicitacaoRepository.delete(solicitacao);
+        } else {
+            throw new IllegalStateException("Só é possível excluir uma solicitação que esteja com o status ABERTO!");
+        }
+    }
     
 }

@@ -2,6 +2,7 @@ package moura.gabriel.portal_solicitacoes.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +53,18 @@ public class SolicitacaoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/excluir/{solicitacaoID}")
+    public ResponseEntity<Solicitacao> excluirSolicitacaoAberta(
+        @PathVariable Long solicitacaoID) {
+            try {
+                solicitacaoService.excluirSolicitacaoAberta(solicitacaoID);
+                return ResponseEntity.ok().build();
+            } catch (IllegalStateException e) {
+                return ResponseEntity.badRequest().build();
+            } catch (RuntimeException e) {
+                return ResponseEntity.notFound().build();
+            }
+        }
     
 }
