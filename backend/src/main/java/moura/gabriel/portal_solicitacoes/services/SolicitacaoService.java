@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
@@ -24,8 +25,9 @@ public class SolicitacaoService {
 
     public Solicitacao criarSolicitacao(SolicitacaoRequestDTO solicitacaoDTO, 
         Long usuarioID) {
-        // todo: Por enquanto que não implementei a função de autenticação, estarei fazendo isso.
-        // Preciso implementar o Spring Security para pegar o usuário logado
+        // TODO: Por enquanto que não implementei a função de autenticação, estarei fazendo isso.
+        // Preciso implementar o Spring Security para pegar o usuário logado. Retirar usuarioID como
+        // parâmetro e usuarioRepository do construtor
         Usuario usuario = usuarioRepository.findById(usuarioID)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
@@ -37,6 +39,30 @@ public class SolicitacaoService {
         solicitacao.setUsuario(usuario);
         solicitacao.setDataAbertura(LocalDateTime.now());
 
+        return solicitacaoRepository.save(solicitacao);
+    }
+
+    public Solicitacao editarSolicitacaoAberta(
+        Long solicitacaoID, AlterarSolicitacaoDTO solicitacaoDTO) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
+            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+
+        if (solicitacao.getStatus() != Status.ABERTO) {
+            throw new IllegalStateException("Só é possível editar uma solicitação que esteja com o status ABERTO!");
+        }
+
+        if(solicitacaoDTO.titulo() != null && !solicitacaoDTO.titulo().isBlank()) {
+            solicitacao.setTitulo(solicitacaoDTO.titulo());
+        }
+        
+        if(solicitacaoDTO.descricao() != null && !solicitacaoDTO.descricao().isBlank()) {
+            solicitacao.setDescricao(solicitacaoDTO.descricao());
+        }
+        
+        if(solicitacaoDTO.categoria() != null) {
+            solicitacao.setCategoria(solicitacaoDTO.categoria());
+        }
+        
         return solicitacaoRepository.save(solicitacao);
     }
     
