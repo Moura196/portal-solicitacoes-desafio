@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
+import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.services.SolicitacaoService;
 
@@ -31,24 +32,24 @@ public class SolicitacaoController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Solicitacao> criarSolicitacao(
+    public ResponseEntity<SolicitacaoResponseDTO> criarSolicitacao(
         @Valid @RequestBody SolicitacaoRequestDTO solicitacaoDTO){
         try {
             // TODO: Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
             Long usuarioMockId = 1L;
             Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioMockId);
-            return ResponseEntity.ok(solicitacao);
+            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PatchMapping("editar/{solicitacaoID}")
-    public ResponseEntity<Solicitacao> editarSolicitacaoAberta(
+    public ResponseEntity<SolicitacaoResponseDTO> editarSolicitacaoAberta(
         @PathVariable Long solicitacaoID, @RequestBody AlterarSolicitacaoDTO solicitacaoDTO) {
         try {
             Solicitacao solicitacaoEditada = solicitacaoService.editarSolicitacaoAberta(solicitacaoID, solicitacaoDTO);
-            return ResponseEntity.ok(solicitacaoEditada);
+            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoEditada));
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().build();
         } catch (RuntimeException e) {
@@ -70,21 +71,23 @@ public class SolicitacaoController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<Solicitacao>> listarSolicitacoes() {
+    public ResponseEntity<List<SolicitacaoResponseDTO>> listarSolicitacoes() {
         try {
             List<Solicitacao> solicitacoes = solicitacaoService.listarSolicitacoes();
-            return ResponseEntity.ok(solicitacoes);
+            return ResponseEntity.ok(solicitacoes.stream()
+                .map(solicitacaoService::converterParaDTO)
+                .toList());
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/detalhar/{solicitacaoID}")
-    public ResponseEntity<Solicitacao> detalharSolicitacao(
+    public ResponseEntity<SolicitacaoResponseDTO> detalharSolicitacao(
         @PathVariable Long solicitacaoID) {
         try {
             Solicitacao solicitacao = solicitacaoService.detalharSolicitacao(solicitacaoID);
-            return ResponseEntity.ok(solicitacao);
+            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

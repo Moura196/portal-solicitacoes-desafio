@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
+import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
+import moura.gabriel.portal_solicitacoes.dtos.UsuarioResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.models.Usuario;
@@ -87,5 +89,21 @@ public class SolicitacaoService {
             .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
         return solicitacao;        
     }
-
+    
+    public SolicitacaoResponseDTO converterParaDTO(Solicitacao solicitacao) {
+        UsuarioResponseDTO usuarioDTO = new UsuarioResponseDTO(
+            solicitacao.getUsuario().getId(),
+            solicitacao.getUsuario().getNome(),
+            solicitacao.getUsuario().getEmail()
+        );
+        return new SolicitacaoResponseDTO(
+            solicitacao.getId(),
+            solicitacao.getTitulo(),
+            solicitacao.getDescricao(),
+            solicitacao.getCategoria(),
+            solicitacao.getStatus(),
+            solicitacao.getDataAbertura(),
+            usuarioDTO
+        );
+    }
 }
