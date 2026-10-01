@@ -1,6 +1,7 @@
 package moura.gabriel.portal_solicitacoes.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -76,5 +77,15 @@ public class SolicitacaoService {
             throw new IllegalStateException("Só é possível excluir uma solicitação que esteja com o status ABERTO!");
         }
     }
-    
+
+    public List<Solicitacao> listarSolicitacoes() {
+        return solicitacaoRepository.findAll();
+    }
+
+    public Solicitacao detalharSolicitacao(Long solicitacaoID) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
+            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+        return solicitacao;        
+    }
+
 }
