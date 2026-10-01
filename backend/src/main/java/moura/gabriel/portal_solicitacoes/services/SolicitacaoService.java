@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
+import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.dtos.UsuarioResponseDTO;
@@ -88,6 +89,36 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
             .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
         return solicitacao;        
+    }
+
+    public Solicitacao alterarStatus(Long solicitacaoID, AlterarStatusRequestDTO novoStatusDTO) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
+            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+        
+        Status statusAtual = solicitacao.getStatus();
+        if (statusAtual == novoStatusDTO.status()) {
+            throw new IllegalStateException("A solicitação já se encontra neste status.");
+        }
+
+        switch (statusAtual) {
+            case ABERTO:
+                if (novoStatusDTO.status() != Status.EM_ATENDIMENTO) {
+                    throw new IllegalStateException("A solicitação só pode passar de ABERTO para EM_ATENDIMENTO!");
+                } 
+                break;
+            case EM_ATENDIMENTO:
+                if (novoStatusDTO.status() != Status.CONCLUIDO) {
+                    throw new IllegalStateException("A solicitação só pode passar de EM_ATENDIMENTO para CONCLUIDO!");
+                } 
+                break;
+            case CONCLUIDO:
+                throw new IllegalStateException("A solicitação já está CONCLUIDA e não pode ter seu status alterado.");
+            default:
+                throw new IllegalStateException("Status inválido!");
+        }
+
+        solicitacao.setStatus(novoStatusDTO.status());
+        return solicitacaoRepository.save(solicitacao);
     }
     
     public SolicitacaoResponseDTO converterParaDTO(Solicitacao solicitacao) {

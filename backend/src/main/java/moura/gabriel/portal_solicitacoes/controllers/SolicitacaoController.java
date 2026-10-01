@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
+import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
@@ -92,5 +93,18 @@ public class SolicitacaoController {
             return ResponseEntity.notFound().build();
         }
     }    
+
+    @PatchMapping("/alterarStatus/{solicitacaoID}")
+    public ResponseEntity<SolicitacaoResponseDTO> alterarStatus(
+        @PathVariable Long solicitacaoID, @Valid @RequestBody AlterarStatusRequestDTO novoStatusDTO) {
+        try {
+            Solicitacao solicitacaoAlterada = solicitacaoService.alterarStatus(solicitacaoID, novoStatusDTO);
+            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoAlterada));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     
 }
