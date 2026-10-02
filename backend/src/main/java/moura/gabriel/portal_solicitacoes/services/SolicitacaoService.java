@@ -12,6 +12,7 @@ import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.dtos.UsuarioResponseDTO;
+import moura.gabriel.portal_solicitacoes.exceptions.RecursoNaoEncontradoException;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.models.Usuario;
@@ -36,7 +37,7 @@ public class SolicitacaoService {
         // Preciso implementar o Spring Security para pegar o usuário logado. Retirar usuarioID como
         // parâmetro e usuarioRepository do construtor
         Usuario usuario = usuarioRepository.findById(usuarioID)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
         
         Solicitacao solicitacao = new Solicitacao();
         solicitacao.setTitulo(solicitacaoDTO.titulo());
@@ -52,21 +53,28 @@ public class SolicitacaoService {
     public Solicitacao editarSolicitacaoAberta(
         Long solicitacaoID, AlterarSolicitacaoDTO solicitacaoDTO) {
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
-            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação não encontrada!"));
 
         if (solicitacao.getStatus() != Status.ABERTO) {
             throw new IllegalStateException("Só é possível editar uma solicitação que esteja com o status ABERTO!");
         }
 
-        if(solicitacaoDTO.titulo() != null && !solicitacaoDTO.titulo().isBlank()) {
+        boolean tituloVazio = solicitacaoDTO.titulo() == null || solicitacaoDTO.titulo().isBlank();
+        boolean descricaoVazia = solicitacaoDTO.descricao() == null || solicitacaoDTO.descricao().isBlank();
+        boolean categoriaVazia = solicitacaoDTO.categoria() == null;
+        if (tituloVazio && descricaoVazia && categoriaVazia) {
+            throw new IllegalStateException("Nenhum campo foi informado para alteração.");
+        }
+
+        if(!tituloVazio) {
             solicitacao.setTitulo(solicitacaoDTO.titulo());
         }
         
-        if(solicitacaoDTO.descricao() != null && !solicitacaoDTO.descricao().isBlank()) {
+        if(!descricaoVazia) {
             solicitacao.setDescricao(solicitacaoDTO.descricao());
         }
         
-        if(solicitacaoDTO.categoria() != null) {
+        if(!categoriaVazia) {
             solicitacao.setCategoria(solicitacaoDTO.categoria());
         }
         
@@ -75,7 +83,7 @@ public class SolicitacaoService {
 
     public void excluirSolicitacaoAberta(Long solicitacaoID) {
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
-            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação não encontrada!"));
         
         if (solicitacao.getStatus() == Status.ABERTO) {
             solicitacaoRepository.delete(solicitacao);
@@ -91,13 +99,13 @@ public class SolicitacaoService {
 
     public Solicitacao detalharSolicitacao(Long solicitacaoID) {
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
-            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação não encontrada!"));
         return solicitacao;        
     }
 
     public Solicitacao alterarStatus(Long solicitacaoID, AlterarStatusRequestDTO novoStatusDTO) {
         Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoID)
-            .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Solicitação não encontrada!"));
         
         Status statusAtual = solicitacao.getStatus();
         if (statusAtual == novoStatusDTO.status()) {
