@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
+import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
@@ -72,9 +74,10 @@ public class SolicitacaoController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<SolicitacaoResponseDTO>> listarSolicitacoes() {
+    public ResponseEntity<List<SolicitacaoResponseDTO>> listarSolicitacoes(
+        @ModelAttribute SolicitacaoFiltroDTO filtroDTO) {
         try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarSolicitacoes();
+            List<Solicitacao> solicitacoes = solicitacaoService.listarSolicitacoes(filtroDTO);
             return ResponseEntity.ok(solicitacoes.stream()
                 .map(solicitacaoService::converterParaDTO)
                 .toList());
