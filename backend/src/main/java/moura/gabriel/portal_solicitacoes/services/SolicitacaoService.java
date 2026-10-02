@@ -1,6 +1,5 @@
 package moura.gabriel.portal_solicitacoes.services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,11 +8,10 @@ import org.springframework.stereotype.Service;
 
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
+import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
-import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.UsuarioResponseDTO;
-import moura.gabriel.portal_solicitacoes.models.Categoria;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.models.Usuario;
@@ -125,6 +123,14 @@ public class SolicitacaoService {
 
         solicitacao.setStatus(novoStatusDTO.status());
         return solicitacaoRepository.save(solicitacao);
+    }
+
+    public long countTotalSolicitacoes() {
+        return solicitacaoRepository.count();
+    }
+
+    public long countTotalPorStatus(Status status) {
+        return solicitacaoRepository.countByStatus(status);
     }
     
     public SolicitacaoResponseDTO converterParaDTO(Solicitacao solicitacao) {

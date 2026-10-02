@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
+import moura.gabriel.portal_solicitacoes.dtos.DashboardDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
+import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.services.SolicitacaoService;
+
 
 
 @RestController 
@@ -76,14 +79,10 @@ public class SolicitacaoController {
     @GetMapping("/listar")
     public ResponseEntity<List<SolicitacaoResponseDTO>> listarSolicitacoes(
         @ModelAttribute SolicitacaoFiltroDTO filtroDTO) {
-        try {
-            List<Solicitacao> solicitacoes = solicitacaoService.listarSolicitacoes(filtroDTO);
-            return ResponseEntity.ok(solicitacoes.stream()
-                .map(solicitacaoService::converterParaDTO)
-                .toList());
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        List<Solicitacao> solicitacoes = solicitacaoService.listarSolicitacoes(filtroDTO);
+        return ResponseEntity.ok(solicitacoes.stream()
+            .map(solicitacaoService::converterParaDTO)
+            .toList());
     }
 
     @GetMapping("/detalhar/{solicitacaoID}")
@@ -109,5 +108,18 @@ public class SolicitacaoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<DashboardDTO> metricasDashboard() {
+        DashboardDTO dashboard = new DashboardDTO(
+            solicitacaoService.countTotalSolicitacoes(),
+            solicitacaoService.countTotalPorStatus(Status.ABERTO),
+            solicitacaoService.countTotalPorStatus(Status.EM_ATENDIMENTO),
+            solicitacaoService.countTotalPorStatus(Status.CONCLUIDO)
+        );
+
+        return ResponseEntity.ok(dashboard);
+    }
+    
     
 }
