@@ -1,20 +1,25 @@
 package moura.gabriel.portal_solicitacoes.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
+import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.UsuarioResponseDTO;
+import moura.gabriel.portal_solicitacoes.models.Categoria;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.models.Usuario;
 import moura.gabriel.portal_solicitacoes.repositories.SolicitacaoRepository;
 import moura.gabriel.portal_solicitacoes.repositories.UsuarioRepository;
+import moura.gabriel.portal_solicitacoes.specifications.SolicitacaoSpecification;
 
 @Service 
 public class SolicitacaoService {
@@ -81,8 +86,9 @@ public class SolicitacaoService {
         }
     }
 
-    public List<Solicitacao> listarSolicitacoes() {
-        return solicitacaoRepository.findAll();
+    public List<Solicitacao> listarSolicitacoes(SolicitacaoFiltroDTO filtroDTO) {
+        Specification<Solicitacao> spec = SolicitacaoSpecification.listarPorFiltros(filtroDTO);
+        return solicitacaoRepository.findAll(spec);
     }
 
     public Solicitacao detalharSolicitacao(Long solicitacaoID) {
