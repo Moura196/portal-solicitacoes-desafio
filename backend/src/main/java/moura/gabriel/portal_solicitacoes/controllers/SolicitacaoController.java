@@ -2,7 +2,6 @@ package moura.gabriel.portal_solicitacoes.controllers;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +24,8 @@ import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
 import moura.gabriel.portal_solicitacoes.services.SolicitacaoService;
 
-
-
-@RestController 
-@RequestMapping ("/solicitacoes")
+@RestController
+@RequestMapping("/solicitacoes")
 public class SolicitacaoController {
 
     private final SolicitacaoService solicitacaoService;
@@ -39,41 +36,25 @@ public class SolicitacaoController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<SolicitacaoResponseDTO> criarSolicitacao(
-        @Valid @RequestBody SolicitacaoRequestDTO solicitacaoDTO){
-        try {
-            // TODO: Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
-            Long usuarioMockId = 1L;
-            Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioMockId);
-            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        @Valid @RequestBody SolicitacaoRequestDTO solicitacaoDTO) {
+        // TODO: Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
+        Long usuarioMockId = 1L;
+        Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioMockId);
+        return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
     }
 
     @PatchMapping("editar/{solicitacaoID}")
     public ResponseEntity<SolicitacaoResponseDTO> editarSolicitacaoAberta(
         @PathVariable Long solicitacaoID, @RequestBody AlterarSolicitacaoDTO solicitacaoDTO) {
-        try {
-            Solicitacao solicitacaoEditada = solicitacaoService.editarSolicitacaoAberta(solicitacaoID, solicitacaoDTO);
-            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoEditada));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Solicitacao solicitacaoEditada = solicitacaoService.editarSolicitacaoAberta(solicitacaoID, solicitacaoDTO);
+        return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoEditada));
     }
 
     @DeleteMapping("/excluir/{solicitacaoID}")
-    public ResponseEntity<Solicitacao> excluirSolicitacaoAberta(
+    public ResponseEntity<Void> excluirSolicitacaoAberta(
         @PathVariable Long solicitacaoID) {
-        try {
-            solicitacaoService.excluirSolicitacaoAberta(solicitacaoID);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        solicitacaoService.excluirSolicitacaoAberta(solicitacaoID);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/listar")
@@ -88,25 +69,15 @@ public class SolicitacaoController {
     @GetMapping("/detalhar/{solicitacaoID}")
     public ResponseEntity<SolicitacaoResponseDTO> detalharSolicitacao(
         @PathVariable Long solicitacaoID) {
-        try {
-            Solicitacao solicitacao = solicitacaoService.detalharSolicitacao(solicitacaoID);
-            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }    
+        Solicitacao solicitacao = solicitacaoService.detalharSolicitacao(solicitacaoID);
+        return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
+    }
 
     @PatchMapping("/alterarStatus/{solicitacaoID}")
     public ResponseEntity<SolicitacaoResponseDTO> alterarStatus(
         @PathVariable Long solicitacaoID, @Valid @RequestBody AlterarStatusRequestDTO novoStatusDTO) {
-        try {
-            Solicitacao solicitacaoAlterada = solicitacaoService.alterarStatus(solicitacaoID, novoStatusDTO);
-            return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoAlterada));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Solicitacao solicitacaoAlterada = solicitacaoService.alterarStatus(solicitacaoID, novoStatusDTO);
+        return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacaoAlterada));
     }
 
     @GetMapping("/dashboard")
@@ -117,9 +88,7 @@ public class SolicitacaoController {
             solicitacaoService.countTotalPorStatus(Status.EM_ATENDIMENTO),
             solicitacaoService.countTotalPorStatus(Status.CONCLUIDO)
         );
-
         return ResponseEntity.ok(dashboard);
     }
-    
-    
+
 }
