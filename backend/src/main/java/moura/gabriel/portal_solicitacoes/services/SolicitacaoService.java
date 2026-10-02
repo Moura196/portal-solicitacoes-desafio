@@ -59,15 +59,22 @@ public class SolicitacaoService {
             throw new IllegalStateException("Só é possível editar uma solicitação que esteja com o status ABERTO!");
         }
 
-        if(solicitacaoDTO.titulo() != null && !solicitacaoDTO.titulo().isBlank()) {
+        boolean tituloVazio = solicitacaoDTO.titulo() == null || solicitacaoDTO.titulo().isBlank();
+        boolean descricaoVazia = solicitacaoDTO.descricao() == null || solicitacaoDTO.descricao().isBlank();
+        boolean categoriaVazia = solicitacaoDTO.categoria() == null;
+        if (tituloVazio && descricaoVazia && categoriaVazia) {
+            throw new IllegalStateException("Nenhum campo foi informado para alteração.");
+        }
+
+        if(!tituloVazio) {
             solicitacao.setTitulo(solicitacaoDTO.titulo());
         }
         
-        if(solicitacaoDTO.descricao() != null && !solicitacaoDTO.descricao().isBlank()) {
+        if(!descricaoVazia) {
             solicitacao.setDescricao(solicitacaoDTO.descricao());
         }
         
-        if(solicitacaoDTO.categoria() != null) {
+        if(!categoriaVazia) {
             solicitacao.setCategoria(solicitacaoDTO.categoria());
         }
         
