@@ -1,1 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+/* === Variáveis Globais do Portal de Solicitações === */
+
+:root {
+    /* Cores principais da interface */
+    --bg-color: #F8FAFC;
+    --surface-color: #FFFFFF;
+    --text-main: #0F172A;
+
+    /* Mapeamento de cores para os status das solicitações */
+    --status-aberto-bg: #DBEAFE;
+    --status-aberto-text: #1D4ED8;
+    --status-atendimento-bg: #FEF3C7;
+    --status-atendimento-text: #B45309;
+    --status-concluido-bg: #D1FAE5;
+    --status-concluido-text: #047857;
+
+    /* Estilos base de UI (bordas e sombras) */
+    --border-radius: 12px;
+    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --box-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Fundo padrão das telas */
+body {
+    background-color: var(--bg-color);
+}
+
+/* === Classes Utilitárias === */
+
+/* Estilo base para os cards (usado no Dashboard e nas listagens) */
+.premium-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--box-shadow-hover);
+}
+
+/* Suaviza as bordas dos modais nativos do Angular Material */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: var(--border-radius) !important;
+}
