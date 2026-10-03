@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarSolicitacaoDTO;
 import moura.gabriel.portal_solicitacoes.dtos.AlterarStatusRequestDTO;
-import moura.gabriel.portal_solicitacoes.dtos.DashboardDTO;
+import moura.gabriel.portal_solicitacoes.dtos.DashboardResponseDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoFiltroDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
@@ -81,8 +81,8 @@ public class SolicitacaoController {
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<DashboardDTO> metricasDashboard() {
-        DashboardDTO dashboard = new DashboardDTO(
+    public ResponseEntity<DashboardResponseDTO> metricasDashboard() {
+        DashboardResponseDTO dashboard = new DashboardResponseDTO(
             solicitacaoService.countTotalSolicitacoes(),
             solicitacaoService.countTotalPorStatus(Status.ABERTO),
             solicitacaoService.countTotalPorStatus(Status.EM_ATENDIMENTO),

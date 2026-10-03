@@ -1,6 +1,6 @@
 package moura.gabriel.portal_solicitacoes.dtos;
 
-public record DashboardDTO(
+public record DashboardResponseDTO(
 
     long totalSolicitacoes,
     long totalAbertas,
