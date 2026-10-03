@@ -3,6 +3,7 @@ package moura.gabriel.portal_solicitacoes.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +95,7 @@ public class SolicitacaoService {
 
     public List<Solicitacao> listarSolicitacoes(SolicitacaoFiltroDTO filtroDTO) {
         Specification<Solicitacao> spec = SolicitacaoSpecification.listarPorFiltros(filtroDTO);
-        return solicitacaoRepository.findAll(spec);
+        return solicitacaoRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "dataAbertura"));
     }
 
     public Solicitacao detalharSolicitacao(Long solicitacaoID) {
