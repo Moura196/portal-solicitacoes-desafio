@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SolicitacaoService } from '../core/services/solicitacao.service';
-import { Categoria, CATEGORIA } from '../core/models/categoria';
+import { SolicitacaoService } from '../../core/services/solicitacao.service';
+import { Categoria, CATEGORIA } from '../../core/models/categoria';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -40,10 +40,10 @@ export class NovaSolicitacaoCompomente {
     if (this.form.invalid) return;
 
     this.solicitacaoService.criarSolicitacao(this.form.getRawValue() as any).subscribe({
-      next: (novaSolicitacao) => {
+      next: (novaSolicitacao: any) => {
         this.dialogRef.close(novaSolicitacao);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao criar solicitação', err);
       }
     });
