@@ -1,0 +1,107 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+/* --- Métricas --- */
+.metrics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+}
+
+.metric-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    flex: 1 1 260px;
+    max-width: 260px;
+}
+
+.metric-card mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+.metric-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: #64748B;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+/* Cores dos ícones usando variáveis do styles.css */
+.icon-aberto {
+    color: var(--status-aberto-text);
+}
+
+.icon-atendimento {
+    color: var(--status-atendimento-text);
+}
+
+.icon-concluido {
+    color: var(--status-concluido-text);
+}
+
+/* --- Filas / Kanban --- */
+.queues-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+.queue-column {
+    background-color: #F1F5F9;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    min-height: 500px;
+    border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.queue-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 3px solid transparent;
+}
+
+.queue-title.aberto {
+    border-color: var(--status-aberto-text);
+}
+
+.queue-title.atendimento {
+    border-color: var(--status-atendimento-text);
+}
+
+.queue-title.concluido {
+    border-color: var(--status-concluido-text);
+}
+
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

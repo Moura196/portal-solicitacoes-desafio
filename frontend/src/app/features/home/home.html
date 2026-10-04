@@ -1,0 +1,82 @@
+<div class="home-container">
+
+    <!-- Dashboard de Métricas -->
+    <section class="metrics-grid">
+        @if (metricas(); as m) {
+        <div class="premium-card metric-card">
+            <mat-icon color="primary">assignment</mat-icon>
+            <div class="metric-info">
+                <span class="metric-label">Total de Solicitações</span>
+                <span class="metric-value">{{ m.totalSolicitacoes }}</span>
+            </div>
+        </div>
+
+        <div class="premium-card metric-card">
+            <mat-icon class="icon-aberto">info</mat-icon>
+            <div class="metric-info">
+                <span class="metric-label">Abertas</span>
+                <span class="metric-value">{{ m.totalAbertas }}</span>
+            </div>
+        </div>
+
+        <div class="premium-card metric-card">
+            <mat-icon class="icon-atendimento">build</mat-icon>
+            <div class="metric-info">
+                <span class="metric-label">Em Atendimento</span>
+                <span class="metric-value">{{ m.totalEmAtendimento }}</span>
+            </div>
+        </div>
+
+        <div class="premium-card metric-card">
+            <mat-icon class="icon-concluido">check_circle</mat-icon>
+            <div class="metric-info">
+                <span class="metric-label">Concluídas</span>
+                <span class="metric-value">{{ m.totalConcluidas }}</span>
+            </div>
+        </div>
+        } @else {
+        <p class="loading-text">Carregando métricas...</p>
+        }
+    </section>
+
+    <!-- Filas de Solicitações (Kanban) -->
+    <section class="queues-container">
+
+        <!-- Coluna: Abertas -->
+        <div class="queue-column">
+            <h3 class="queue-title aberto">Abertas ({{ abertas().length }})</h3>
+            <div class="queue-list">
+                @for (solic of abertas(); track solic.id) {
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
+                } @empty {
+                <p class="empty-msg">Nenhuma solicitação aberta.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Coluna: Em Atendimento -->
+        <div class="queue-column">
+            <h3 class="queue-title atendimento">Em Atendimento ({{ emAtendimento().length }})</h3>
+            <div class="queue-list">
+                @for (solic of emAtendimento(); track solic.id) {
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
+                } @empty {
+                <p class="empty-msg">Nenhuma solicitação em atendimento.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Coluna: Concluídas -->
+        <div class="queue-column">
+            <h3 class="queue-title concluido">Concluídas ({{ concluidas().length }})</h3>
+            <div class="queue-list">
+                @for (solic of concluidas(); track solic.id) {
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
+                } @empty {
+                <p class="empty-msg">Nenhuma solicitação concluída.</p>
+                }
+            </div>
+        </div>
+
+    </section>
+</div>

@@ -1,5 +1,10 @@
 # Backend (Java/Maven)
 target/
+.vscode/
 
 # Frontend (Node.js)
 node_modules/
+
+# IntelliJ IDEA
+.idea/
+*.iml

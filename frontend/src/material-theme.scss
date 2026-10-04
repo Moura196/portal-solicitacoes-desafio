@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+
+/* Importando a fonte principal do projeto */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+html {
+  height: 100%;
+
+  /* Configuração do tema base do Angular Material */
+  @include mat.theme((color: (primary: mat.$rose-palette,
+        tertiary: mat.$red-palette,
+      ),
+      typography: 'Inter',
+      density: 0,
+    ));
+}
+
+body {
+  /* Habilita o modo claro por padrão */
+  color-scheme: light;
+
+  /* Variáveis de sistema do Material para cor e fonte */
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  /* Reset básico de margem */
+  margin: 0;
+  height: 100%;
+}

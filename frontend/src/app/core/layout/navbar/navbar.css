@@ -1,0 +1,41 @@
+.premium-navbar {
+    background-color: var(--surface-color);
+    color: var(--text-main);
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 24px;
+    height: 72px;
+    /* Um pouco mais alto que o padrão para uma sensação premium */
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.actions-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.new-btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    padding: 0 20px;
+}

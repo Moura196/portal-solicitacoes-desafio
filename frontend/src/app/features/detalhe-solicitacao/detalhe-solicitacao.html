@@ -1,0 +1,60 @@
+<h2 mat-dialog-title class="dialog-header">
+    Detalhes #{{ solicitacao()?.id }}
+</h2>
+
+<mat-dialog-content>
+    @if (!solicitacao()) {
+    <p>Carregando dados da solicitação...</p>
+    } @else {
+    <!-- Banner de Informações Base -->
+    <div class="metadata-banner">
+        <span><mat-icon>person</mat-icon> Solicitante: {{ solicitacao()?.solicitante?.nome }}</span>
+        <span><mat-icon>calendar_today</mat-icon> Criada em: {{ solicitacao()?.dataAbertura | date:'short' }}</span>
+    </div>
+
+    <!-- Formulário -->
+    <form [formGroup]="form" class="form-container">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo">
+        </mat-form-field>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Categoria</mat-label>
+                <mat-select formControlName="categoria">
+                    @for (cat of categorias; track cat) {
+                    <mat-option [value]="cat">{{ categoriaLabels[cat] }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                    @for (st of statusList; track st) {
+                    <mat-option [value]="st">{{ statusLabels[st] }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput formControlName="descricao" rows="4"></textarea>
+        </mat-form-field>
+    </form>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    @if (solicitacao()?.status === 'ABERTO') {
+    <button mat-icon-button color="warn" (click)="excluir()" title="Excluir Solicitação">
+        <mat-icon>delete</mat-icon>
+    </button>
+    }
+    <button mat-button (click)="fechar()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid || form.pristine" (click)="salvar()">
+        Salvar Alterações
+    </button>
+</mat-dialog-actions>

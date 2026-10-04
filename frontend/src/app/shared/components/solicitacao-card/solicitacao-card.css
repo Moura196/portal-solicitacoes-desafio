@@ -1,0 +1,69 @@
+.solicitacao-item {
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.solic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.solic-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #64748B;
+}
+
+.solic-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.solic-details mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.solic-id {
+    font-size: 0.8rem;
+    color: #94A3B8;
+    font-weight: 600;
+}
+
+.solicitacao-item h4 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-aberto {
+    background: var(--status-aberto-bg);
+    color: var(--status-aberto-text);
+}
+
+.status-atendimento {
+    background: var(--status-atendimento-bg);
+    color: var(--status-atendimento-text);
+}
+
+.status-concluido {
+    background: var(--status-concluido-bg);
+    color: var(--status-concluido-text);
+}
