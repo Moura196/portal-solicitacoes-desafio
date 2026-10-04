@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Filtrar Solicitações</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="form" class="form-container">
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo" placeholder="Buscar por palavra-chave">
+        </mat-form-field>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Categoria</mat-label>
+                <mat-select formControlName="categoria">
+                    <mat-option value="">Todas</mat-option>
+                    @for (cat of categorias; track cat) {
+                    <mat-option [value]="cat">{{ categoriaLabels[cat] }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option value="">Todos</mat-option>
+                    @for (st of statusList; track st) {
+                    <mat-option [value]="st">{{ statusLabels[st] }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Data Início</mat-label>
+                <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+                <mat-datepicker #pickerInicio></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Data Fim</mat-label>
+                <input matInput [matDatepicker]="pickerFim" formControlName="dataFim">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerFim"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFim></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button color="warn" (click)="limpar()">Limpar Filtros</button>
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="pesquisar()">Aplicar Filtro</button>
+</mat-dialog-actions>
