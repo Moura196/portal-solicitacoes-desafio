@@ -1,0 +1,192 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    /* Mais espaço entre métricas e filas */
+}
+
+/* --- Métricas --- */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.metric-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+}
+
+.metric-card mat-icon {
+    font-size: 48px;
+    /* Ícones grandes para destaque */
+    width: 48px;
+    height: 48px;
+}
+
+.metric-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: #64748B;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+}
+
+/* Cores dos ícones usando variáveis do styles.css */
+.icon-aberto {
+    color: var(--status-aberto-text);
+}
+
+.icon-atendimento {
+    color: var(--status-atendimento-text);
+}
+
+.icon-concluido {
+    color: var(--status-concluido-text);
+}
+
+/* --- Filas / Kanban --- */
+.queues-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.queue-column {
+    background-color: #F1F5F9;
+    /* Fundo bem sutil para as colunas */
+    border-radius: var(--border-radius);
+    padding: 20px;
+    min-height: 500px;
+    border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.queue-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 3px solid transparent;
+    /* Borda grossa para dar personalidade */
+}
+
+.queue-title.aberto {
+    border-color: var(--status-aberto-text);
+}
+
+.queue-title.atendimento {
+    border-color: var(--status-atendimento-text);
+}
+
+.queue-title.concluido {
+    border-color: var(--status-concluido-text);
+}
+
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Base "Crua" do Card, que extrairemos depois */
+.solicitacao-item {
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.solic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.solic-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #64748B;
+}
+
+.solic-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.solic-details mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.solic-id {
+    font-size: 0.8rem;
+    color: #94A3B8;
+    font-weight: 600;
+}
+
+.solicitacao-item h4 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-aberto {
+    background: var(--status-aberto-bg);
+    color: var(--status-aberto-text);
+}
+
+.status-atendimento {
+    background: var(--status-atendimento-bg);
+    color: var(--status-atendimento-text);
+}
+
+.status-concluido {
+    background: var(--status-concluido-bg);
+    color: var(--status-concluido-text);
+}
+
+.empty-msg {
+    text-align: center;
+    color: #94A3B8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 32px 0;
+}
+
+/* Responsividade Básica */
+@media (max-width: 1024px) {
+    .queues-container {
+        grid-template-columns: 1fr;
+    }
+}
