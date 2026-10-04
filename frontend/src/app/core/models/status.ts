@@ -5,3 +5,9 @@ export const STATUS: Record<Status, string> = {
     'EM_ATENDIMENTO': 'Em Atendimento',
     'CONCLUIDO': 'Concluído'
 };
+
+export const STATUS_CLASS: Record<Status, string> = {
+    'ABERTO': 'status-aberto',
+    'EM_ATENDIMENTO': 'status-atendimento',
+    'CONCLUIDO': 'status-concluido'
+};
