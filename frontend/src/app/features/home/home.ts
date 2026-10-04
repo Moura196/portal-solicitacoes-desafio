@@ -1,9 +1,9 @@
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
-import { SolicitacaoService } from '../core/services/solicitacao.service';
-import { DashboardMetricas } from '../core/models/dashboard-metrics';
-import { Solicitacao } from '../core/models/solicitacao';
+import { Component, computed, inject, signal, OnInit, effect } from '@angular/core';
+import { SolicitacaoService } from '../../core/services/solicitacao.service';
+import { DashboardMetricas } from '../../core/models/dashboard-metrics';
+import { Solicitacao } from '../../core/models/solicitacao';
 import { MatIconModule } from '@angular/material/icon';
-import { SolicitacaoCardComponente } from '../shared/components/solicitacao-card';
+import { SolicitacaoCardComponente } from '../../shared/components/solicitacao-card/solicitacao-card';
 
 @Component({
   selector: 'app-home',
@@ -25,9 +25,15 @@ export class HomeComponente implements OnInit {
   emAtendimento = computed(() => this.solicitacoes().filter(s => s.status === 'EM_ATENDIMENTO'));
   concluidas = computed(() => this.solicitacoes().filter(s => s.status === 'CONCLUIDO'));
 
+  constructor() {
+    effect(() => {
+      const filtros = this.solicitacaoService.filtroAtual();
+      this.listarSolicitacoes(filtros);
+    });
+  }
+
   ngOnInit(): void {
     this.carregarDashboard();
-    this.listarSolicitacoes();
   }
 
   private carregarDashboard(): void {
@@ -37,8 +43,8 @@ export class HomeComponente implements OnInit {
     });
   }
 
-  private listarSolicitacoes(): void {
-    this.solicitacaoService.listarSolicitacoes().subscribe({
+  private listarSolicitacoes(filtro: any = {}): void {
+    this.solicitacaoService.listarSolicitacoes(filtro).subscribe({
       next: (dados) => this.solicitacoes.set(dados),
       error: (err) => console.error('Erro ao carregar solicitações', err)
     });
