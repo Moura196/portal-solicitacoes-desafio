@@ -1,0 +1,21 @@
+<mat-toolbar>
+    <div class="logo-container">
+        <mat-icon color="primary">assignment</mat-icon>
+        <span class="app-title">Portal de Solicitações</span>
+    </div>
+    <span class="spacer"></span>
+    <div class="actions-container">
+        <button mat-flat-button color="primary" class="new-btn" (click)="novaSolicitacao()">
+            <mat-icon>add</mat-icon>
+            Nova Solicitação
+        </button>
+
+        <button mat-icon-button (click)="pesquisar()" aria-label="Pesquisar">
+            <mat-icon>search</mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="sair()" aria-label="Sair">
+            <mat-icon>logout</mat-icon>
+        </button>
+    </div>
+</mat-toolbar>
