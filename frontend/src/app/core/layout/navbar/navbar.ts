@@ -39,7 +39,7 @@ export class NavbarComponente {
 
   protected pesquisar(): void {
     const dialogRef = this.dialog.open(ConsultaSolicitacaoComponent, {
-      width: '600px'
+      width: '750px'
     });
     dialogRef.afterClosed().subscribe(filtro => {
       if (filtro) {
