@@ -27,7 +27,7 @@ body {
 
 /* === Classes Utilitárias === */
 
-/* Estilo base para os cards (usado no Dashboard e nas listagens) */
+/* Estilo base para os cards */
 .premium-card {
     background: var(--surface-color);
     border-radius: var(--border-radius);
@@ -45,4 +45,20 @@ body {
 /* Suaviza as bordas dos modais nativos do Angular Material */
 .mat-mdc-dialog-container .mdc-dialog__surface {
     border-radius: var(--border-radius) !important;
+}
+
+/* === Sobrescrita Global do Angular Material === */
+
+/* Melhoria de contraste para todos os campos de texto e selects desabilitados na aplicação */
+.mdc-text-field--disabled .mdc-text-field__input,
+.mat-mdc-select-disabled .mat-mdc-select-value-text {
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    opacity: 1 !important;
+}
+
+.mdc-text-field--disabled .mdc-notched-outline__leading,
+.mdc-text-field--disabled .mdc-notched-outline__notch,
+.mdc-text-field--disabled .mdc-notched-outline__trailing {
+    border-color: #94a3b8 !important;
 }

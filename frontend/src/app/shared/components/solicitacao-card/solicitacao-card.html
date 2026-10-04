@@ -1,4 +1,4 @@
-<div class="premium-card solicitacao-item">
+<div class="premium-card solicitacao-item" (click)="abrirDetalhes()">
     <div class="solic-header">
         <span class="solic-id">#{{ solicitacao().id }}</span>
         <span class="badge" [class]="statusClass()">{{ statusLabel() }}</span>
