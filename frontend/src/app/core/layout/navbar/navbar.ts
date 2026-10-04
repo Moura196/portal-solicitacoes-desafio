@@ -3,7 +3,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NovaSolicitacaoCompomente } from '../../features/nova-solicitacao';
+import { NovaSolicitacaoCompomente } from '../../../features/nova-solicitacao/nova-solicitacao';
+import { ConsultaSolicitacaoComponent } from '../../../features/consulta-solicitacao/consulta-solicitacao';
+import { SolicitacaoService } from '../../services/solicitacao.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +21,7 @@ import { NovaSolicitacaoCompomente } from '../../features/nova-solicitacao';
 export class NavbarComponente {
 
   private dialog = inject(MatDialog);
+  private solicitacaoService = inject(SolicitacaoService);
 
   protected novaSolicitacao(): void {
     const dialogRef = this.dialog.open(NovaSolicitacaoCompomente, {
@@ -35,8 +38,15 @@ export class NavbarComponente {
   }
 
   protected pesquisar(): void {
-    // TODO: Criar funcionalidade depois de criar o componente necessário
-    console.log('Ação: Pesquisar clicado');
+    const dialogRef = this.dialog.open(ConsultaSolicitacaoComponent, {
+      width: '600px'
+    });
+    dialogRef.afterClosed().subscribe(filtro => {
+      if (filtro) {
+        console.log('Aplicando filtros:', filtro);
+        this.solicitacaoService.filtroAtual.set(filtro);
+      }
+    });
   }
 
   protected sair(): void {
