@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -15,6 +16,8 @@ import { AlteraStatus } from '../models/altera-status';
 export class SolicitacaoService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/solicitacoes`;
+
+  filtroAtual = signal<SolicitacaoFiltro>({});
 
   criarSolicitacao(solicitacao: SolicitacaoRequest): Observable<Solicitacao> {
     return this.http.post<Solicitacao>(`${this.apiUrl}/cadastrar`, solicitacao);
