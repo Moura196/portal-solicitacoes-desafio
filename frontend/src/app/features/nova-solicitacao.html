@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Nova Solicitação</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="form" class="form-container">
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo" placeholder="Ex: Conserto de impressora">
+            @if (form.controls.titulo.hasError('required')) {
+            <mat-error>O título é obrigatório</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="categoria">
+                @for (cat of categorias; track cat) {
+                <mat-option [value]="cat">{{ categoriaLabels[cat] }}</mat-option>
+                }
+            </mat-select>
+            @if (form.controls.categoria.hasError('required')) {
+            <mat-error>A categoria é obrigatória</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput formControlName="descricao" rows="4"
+                placeholder="Descreva o problema com detalhes..."></textarea>
+            @if (form.controls.descricao.hasError('required')) {
+            <mat-error>A descrição é obrigatória</mat-error>
+            }
+        </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="salvar()">Criar Solicitação</button>
+</mat-dialog-actions>
