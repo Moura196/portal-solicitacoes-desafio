@@ -1,0 +1,14 @@
+<div class="premium-card solicitacao-item">
+    <div class="solic-header">
+        <span class="solic-id">#{{ solicitacao().id }}</span>
+        <span class="badge" [class]="statusClass()">{{ statusLabel() }}</span>
+    </div>
+
+    <h4>{{ solicitacao().titulo }}</h4>
+
+    <div class="solic-details">
+        <span><mat-icon>category</mat-icon> {{ categoriaLabel() }}</span>
+        <span><mat-icon>person</mat-icon> {{ solicitacao().solicitante?.nome }}</span>
+        <span><mat-icon>calendar_today</mat-icon> {{ solicitacao().dataAbertura | date:'shortDate' }}</span>
+    </div>
+</div>
