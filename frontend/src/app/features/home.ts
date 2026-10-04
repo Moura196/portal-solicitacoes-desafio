@@ -3,13 +3,13 @@ import { SolicitacaoService } from '../core/services/solicitacao.service';
 import { DashboardMetricas } from '../core/models/dashboard-metrics';
 import { Solicitacao } from '../core/models/solicitacao';
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
+import { SolicitacaoCardComponente } from '../shared/components/solicitacao-card';
 
 @Component({
   selector: 'app-home',
   imports: [
     MatIconModule,
-    DatePipe
+    SolicitacaoCardComponente
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
