@@ -39,7 +39,7 @@
         }
     </section>
 
-    <!-- Filas de Solicitações (Estilo Kanban) -->
+    <!-- Filas de Solicitações (Kanban) -->
     <section class="queues-container">
 
         <!-- Coluna: Abertas -->
@@ -47,18 +47,7 @@
             <h3 class="queue-title aberto">Abertas ({{ abertas().length }})</h3>
             <div class="queue-list">
                 @for (solic of abertas(); track solic.id) {
-                <div class="premium-card solicitacao-item">
-                    <div class="solic-header">
-                        <span class="solic-id">#{{ solic.id }}</span>
-                        <span class="badge status-aberto">Aberto</span>
-                    </div>
-                    <h4>{{ solic.titulo }}</h4>
-                    <div class="solic-details">
-                        <span><mat-icon>category</mat-icon> {{ solic.categoria }}</span>
-                        <span><mat-icon>person</mat-icon> {{ solic.solicitante?.nome }}</span>
-                        <span><mat-icon>calendar_today</mat-icon> {{ solic.dataAbertura | date:'shortDate' }}</span>
-                    </div>
-                </div>
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
                 } @empty {
                 <p class="empty-msg">Nenhuma solicitação aberta.</p>
                 }
@@ -70,20 +59,9 @@
             <h3 class="queue-title atendimento">Em Atendimento ({{ emAtendimento().length }})</h3>
             <div class="queue-list">
                 @for (solic of emAtendimento(); track solic.id) {
-                <div class="premium-card solicitacao-item">
-                    <div class="solic-header">
-                        <span class="solic-id">#{{ solic.id }}</span>
-                        <span class="badge status-atendimento">Em Atendimento</span>
-                    </div>
-                    <h4>{{ solic.titulo }}</h4>
-                    <div class="solic-details">
-                        <span><mat-icon>category</mat-icon> {{ solic.categoria }}</span>
-                        <span><mat-icon>person</mat-icon> {{ solic.solicitante?.nome }}</span>
-                        <span><mat-icon>calendar_today</mat-icon> {{ solic.dataAbertura | date:'shortDate' }}</span>
-                    </div>
-                </div>
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
                 } @empty {
-                <p class="empty-msg">Nenhuma em atendimento.</p>
+                <p class="empty-msg">Nenhuma solicitação em atendimento.</p>
                 }
             </div>
         </div>
@@ -93,20 +71,9 @@
             <h3 class="queue-title concluido">Concluídas ({{ concluidas().length }})</h3>
             <div class="queue-list">
                 @for (solic of concluidas(); track solic.id) {
-                <div class="premium-card solicitacao-item">
-                    <div class="solic-header">
-                        <span class="solic-id">#{{ solic.id }}</span>
-                        <span class="badge status-concluido">Concluída</span>
-                    </div>
-                    <h4>{{ solic.titulo }}</h4>
-                    <div class="solic-details">
-                        <span><mat-icon>category</mat-icon> {{ solic.categoria }}</span>
-                        <span><mat-icon>person</mat-icon> {{ solic.solicitante?.nome }}</span>
-                        <span><mat-icon>calendar_today</mat-icon> {{ solic.dataAbertura | date:'shortDate' }}</span>
-                    </div>
-                </div>
+                <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
                 } @empty {
-                <p class="empty-msg">Nenhuma concluída.</p>
+                <p class="empty-msg">Nenhuma solicitação concluída.</p>
                 }
             </div>
         </div>

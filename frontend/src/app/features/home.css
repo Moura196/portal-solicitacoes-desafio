@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    /* Mais espaço entre métricas e filas */
 }
 
 /* --- Métricas --- */
@@ -21,7 +20,6 @@
 
 .metric-card mat-icon {
     font-size: 48px;
-    /* Ícones grandes para destaque */
     width: 48px;
     height: 48px;
 }
@@ -70,7 +68,6 @@
 
 .queue-column {
     background-color: #F1F5F9;
-    /* Fundo bem sutil para as colunas */
     border-radius: var(--border-radius);
     padding: 20px;
     min-height: 500px;
@@ -84,7 +81,6 @@
     font-weight: 600;
     padding-bottom: 12px;
     border-bottom: 3px solid transparent;
-    /* Borda grossa para dar personalidade */
 }
 
 .queue-title.aberto {
@@ -103,90 +99,4 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-}
-
-/* Base "Crua" do Card, que extrairemos depois */
-.solicitacao-item {
-    padding: 20px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-}
-
-.solic-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.solic-details {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 0.85rem;
-    color: #64748B;
-}
-
-.solic-details span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.solic-details mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-}
-
-.solic-id {
-    font-size: 0.8rem;
-    color: #94A3B8;
-    font-weight: 600;
-}
-
-.solicitacao-item h4 {
-    margin: 0;
-    font-size: 1.05rem;
-    color: var(--text-main);
-}
-
-.badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.status-aberto {
-    background: var(--status-aberto-bg);
-    color: var(--status-aberto-text);
-}
-
-.status-atendimento {
-    background: var(--status-atendimento-bg);
-    color: var(--status-atendimento-text);
-}
-
-.status-concluido {
-    background: var(--status-concluido-bg);
-    color: var(--status-concluido-text);
-}
-
-.empty-msg {
-    text-align: center;
-    color: #94A3B8;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 32px 0;
-}
-
-/* Responsividade Básica */
-@media (max-width: 1024px) {
-    .queues-container {
-        grid-template-columns: 1fr;
-    }
 }
