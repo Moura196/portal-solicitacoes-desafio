@@ -5,6 +5,7 @@
     </div>
     <span class="spacer"></span>
     <div class="actions-container">
+        @if (isAutenticado()) {
         <button mat-flat-button color="primary" class="new-btn" (click)="novaSolicitacao()">
             <mat-icon>add</mat-icon>
             Nova Solicitação
@@ -17,5 +18,6 @@
         <button mat-icon-button (click)="sair()" aria-label="Sair">
             <mat-icon>logout</mat-icon>
         </button>
+        }
     </div>
 </mat-toolbar>

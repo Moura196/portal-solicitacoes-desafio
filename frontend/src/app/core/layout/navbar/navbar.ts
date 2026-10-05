@@ -6,6 +6,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { NovaSolicitacaoCompomente } from '../../../features/nova-solicitacao/nova-solicitacao';
 import { ConsultaSolicitacaoComponent } from '../../../features/consulta-solicitacao/consulta-solicitacao';
 import { SolicitacaoService } from '../../services/solicitacao.service';
+import { AuthService } from '../../auth/auth';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,6 +24,9 @@ export class NavbarComponente {
 
   private dialog = inject(MatDialog);
   private solicitacaoService = inject(SolicitacaoService);
+  private authService = inject(AuthService);
+  private notificationService = inject(NotificationService);
+  protected isAutenticado = this.authService.isAuthenticated;
 
   protected novaSolicitacao(): void {
     const dialogRef = this.dialog.open(NovaSolicitacaoCompomente, {
@@ -31,8 +36,8 @@ export class NavbarComponente {
 
     dialogRef.afterClosed().subscribe(resultado => {
       if (resultado) {
-        // TODO: Implementar um alerta ou notificação para o usuário
-        console.log('Nova solicitação criada com sucesso!', resultado);
+        this.notificationService.success('Nova solicitação criada com sucesso!');
+        this.solicitacaoService.recarregarLista();
       }
     });
   }
@@ -50,8 +55,7 @@ export class NavbarComponente {
   }
 
   protected sair(): void {
-    // TODO: Criar funcionalidade depois de implementar a autenticação
-    console.log('Ação: Sair clicado');
+    this.authService.logout();
   }
 
 }
