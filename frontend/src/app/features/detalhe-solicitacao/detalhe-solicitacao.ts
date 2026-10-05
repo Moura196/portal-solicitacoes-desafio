@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,6 +12,8 @@ import { SolicitacaoService } from '../../core/services/solicitacao.service';
 import { Categoria, CATEGORIA } from '../../core/models/categoria';
 import { Status, STATUS } from '../../core/models/status';
 import { Solicitacao } from '../../core/models/solicitacao';
+import { NotificationService } from '../../core/services/notification.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-detalhe-solicitacao',
@@ -33,6 +35,8 @@ export class DetalheSolicitacaoComponent implements OnInit {
   private solicitacaoService = inject(SolicitacaoService);
   private dialogRef = inject(MatDialogRef<DetalheSolicitacaoComponent>);
   public data = inject(MAT_DIALOG_DATA); // Injeta os dados passados na abertura do Modal (o ID)
+  private notificationService = inject(NotificationService);
+  private dialog = inject(MatDialog);
 
   solicitacao = signal<Solicitacao | null>(null);
 
@@ -50,12 +54,10 @@ export class DetalheSolicitacaoComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // Busca os detalhes frescos via GET
     this.solicitacaoService.detalharSolicitacao(this.data.id).subscribe({
       next: (solic) => {
         this.solicitacao.set(solic);
 
-        // Preenche os campos
         this.form.patchValue({
           titulo: solic.titulo,
           descricao: solic.descricao,
@@ -63,19 +65,20 @@ export class DetalheSolicitacaoComponent implements OnInit {
           status: solic.status as string
         });
 
-        // Bloqueia campos sensíveis se não estiver Aberto (regra de negócio)
         if (solic.status !== 'ABERTO') {
           this.form.controls.titulo.disable();
           this.form.controls.descricao.disable();
           this.form.controls.categoria.disable();
         }
 
-        // Se já estiver concluída, bloqueia também o status
         if (solic.status === 'CONCLUIDO') {
           this.form.controls.status.disable();
         }
       },
-      error: (err) => console.error('Erro ao detalhar', err)
+      error: (err) => {
+        console.error('Erro ao detalhar', err);
+        this.notificationService.error('Erro ao buscar detalhes da solicitação', err.error);
+      }
     });
   }
 
@@ -88,7 +91,6 @@ export class DetalheSolicitacaoComponent implements OnInit {
 
     const requests = [];
 
-    // 1. Verifica se houve mudança nos dados textuais
     const detalhesMudaram = val.titulo !== original.titulo ||
       val.descricao !== original.descricao ||
       val.categoria !== original.categoria;
@@ -101,7 +103,6 @@ export class DetalheSolicitacaoComponent implements OnInit {
       }));
     }
 
-    // 2. Verifica se houve mudança no Status
     const statusMudou = val.status !== original.status;
     if (statusMudou) {
       requests.push(this.solicitacaoService.alterarStatus(original.id, {
@@ -110,14 +111,30 @@ export class DetalheSolicitacaoComponent implements OnInit {
     }
 
     if (requests.length === 0) {
-      this.dialogRef.close(); // Fecha se o usuário não mudou nada e apertou salvar
+      this.dialogRef.close();
       return;
     }
 
-    // Dispara as requisições que precisarem simultaneamente
     forkJoin(requests).subscribe({
-      next: () => this.dialogRef.close(true), // Avisa o pai que algo foi modificado!
-      error: (err) => console.error('Erro ao salvar', err)
+      next: () => {
+        this.notificationService.success('Solicitação atualizada com sucesso!');
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        console.error('Erro ao salvar', err);
+        let errorDetails = err.error;
+        if (errorDetails && errorDetails.mensagem) {
+          if (errorDetails.mensagem.includes('A solicitação só pode passar de EM_ATENDIMENTO para CONCLUIDO')) {
+            this.notificationService.error('Apenas transição para "Concluído" é permitida.');
+            return;
+          }
+          if (errorDetails.mensagem.includes('A solicitação só pode passar de ABERTO para EM_ATENDIMENTO')) {
+            this.notificationService.error('Apenas transição para "Em Atendimento" é permitida.');
+            return;
+          }
+        }
+        this.notificationService.error('Erro ao atualizar solicitação', errorDetails);
+      }
     });
   }
 
@@ -125,15 +142,42 @@ export class DetalheSolicitacaoComponent implements OnInit {
     const sol = this.solicitacao();
     if (!sol || sol.status !== 'ABERTO') return;
 
-    if (confirm('Tem certeza que deseja excluir esta solicitação? Essa ação não pode ser desfeita.')) {
-      this.solicitacaoService.excluirSolicitacaoAberta(sol.id!).subscribe({
-        next: () => this.dialogRef.close(true), // Avisa o pai da exclusão
-        error: (err) => console.error('Erro ao excluir', err)
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Confirmar Exclusão',
+        message: 'Tem certeza que deseja excluir esta solicitação? Essa ação não pode ser desfeita.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.solicitacaoService.excluirSolicitacaoAberta(sol.id!).subscribe({
+          next: () => {
+            this.notificationService.success('Solicitação excluída com sucesso!');
+            this.dialogRef.close(true);
+          },
+          error: (err) => {
+            console.error('Erro ao excluir', err);
+            this.notificationService.error('Erro ao excluir solicitação', err.error);
+          }
+        });
+      }
+    });
   }
 
   fechar(): void {
     this.dialogRef.close();
+  }
+
+  houveAlteracao(): boolean {
+    const original = this.solicitacao();
+    if (!original) return false;
+
+    const current = this.form.getRawValue();
+    return current.titulo !== original.titulo ||
+      current.descricao !== original.descricao ||
+      current.categoria !== original.categoria ||
+      current.status !== original.status;
   }
 }

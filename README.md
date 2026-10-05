@@ -33,7 +33,9 @@ spring.jpa.hibernate.ddl-auto=validate
 ```
 
 ### Credenciais de Demonstração
-> **Aviso:** Na atual Release 1.0.0, o sistema **não possui bloqueio por login**. O acesso às funcionalidades de listagem e visualização do dashboard está público para facilitar o desenvolvimento e testes locais. O módulo de segurança será implementado na próxima versão.
+> O sistema possui bloqueio de rotas e segurança completa via JWT. Para acessar e avaliar, utilize as credenciais pré-cadastradas automaticamente pelas migrações do Flyway:
+*   **E-mail:** avaliador@bitsolucoes.com
+*   **Senha:** 123456
 
 ---
 
@@ -68,12 +70,12 @@ O Frontend estará rodando e disponível em: `http://localhost:4200`.
 
 ---
 
-## 🔒 Módulo de Autenticação (A ser Desenvolvido)
+## 🔒 Módulo de Autenticação
 
-A arquitetura do projeto já foi preparada para receber uma camada de segurança robusta. Na **próxima release (v1.1.0)**, implementaremos:
-*   Autenticação via **JWT (JSON Web Tokens)**.
-*   Guards no Angular (`CanActivate`) para proteção de rotas.
-*   `SecurityFilterChain` no Spring Boot para interceptação e validação de requisições.
+A segurança do projeto está totalmente operacional de ponta a ponta:
+*   **Backend:** Autenticação stateless via **JWT (JSON Web Tokens)** e Spring Security, com filtro (`SecurityFilter`) validando as requisições privadas.
+*   **Frontend:** Protegido via `AuthGuard` no Angular, mantendo estado reativo da sessão.
+*   **Integração:** `AuthInterceptor` configurado para anexar o cabeçalho `Authorization: Bearer <token>` automaticamente em todas as chamadas à API.
 
 ---
 
@@ -82,9 +84,9 @@ A arquitetura do projeto já foi preparada para receber uma camada de segurança
 Nesta primeira entrega, os seguintes diferenciais arquiteturais e visuais foram implementados:
 
 *   ✅ **Responsividade Avançada com CSS Puro:** Não utilizamos bibliotecas como Bootstrap ou Tailwind. Todo o sistema de design (variáveis, grid, flexbox, responsividade) foi criado "do zero", desenvolvendo domínio de UI/UX e CSS.
-*   *(Em breve)* Docker e Docker Compose (Completo para a stack).
-*   *(Em breve)* Testes Automatizados (JUnit e Jasmine/Karma).
-*   *(Em breve)* CI/CD (GitHub Actions).
+*   *(Opcional)* Docker e Docker Compose (Em processo de estruturação).
+*   *(Opcional)* Testes Automatizados Unitários (Em processo de estruturação).
+*   *(Opcional)* CI/CD (GitHub Actions) (Em processo de estruturação).
 
 ---
 *Documentação desenvolvida para a avaliação técnica. Consulte o Memorial Técnico para entender as decisões arquiteturais.*
