@@ -39,6 +39,14 @@
         }
     </section>
 
+    @if (hasActiveFilters()) {
+    <div class="active-filters-banner">
+        <mat-icon>filter_list</mat-icon>
+        <span>Exibindo resultados filtrados</span>
+        <button mat-button color="warn" (click)="clearFilters()">Limpar Filtros</button>
+    </div>
+    }
+
     <!-- Filas de Solicitações (Kanban) -->
     <section class="queues-container">
 
@@ -68,7 +76,14 @@
 
         <!-- Coluna: Concluídas -->
         <div class="queue-column">
-            <h3 class="queue-title concluido">Concluídas ({{ concluidas().length }})</h3>
+            <div class="queue-title-wrapper concluido" (click)="toggleConcluidas()">
+                <h3 class="queue-title no-border">Concluídas ({{ concluidas().length }})</h3>
+                <button mat-icon-button type="button" (click)="toggleConcluidas(); $event.stopPropagation()">
+                    <mat-icon>{{ isConcluidasCollapsed() ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
+                </button>
+            </div>
+            
+            @if (!isConcluidasCollapsed()) {
             <div class="queue-list">
                 @for (solic of concluidas(); track solic.id) {
                 <app-solicitacao-card [solicitacao]="solic"></app-solicitacao-card>
@@ -76,6 +91,7 @@
                 <p class="empty-msg">Nenhuma solicitação concluída.</p>
                 }
             </div>
+            }
         </div>
 
     </section>

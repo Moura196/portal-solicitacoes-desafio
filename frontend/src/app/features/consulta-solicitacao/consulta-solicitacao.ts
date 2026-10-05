@@ -46,6 +46,16 @@ export class ConsultaSolicitacaoComponent {
   pesquisar(): void {
     const rawValue = this.form.value;
 
+    const formatarData = (data: any) => {
+      if (!data) return '';
+      const d = new Date(data);
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d.toISOString().split('T')[0];
+    };
+
+    if (rawValue.dataInicio) rawValue.dataInicio = formatarData(rawValue.dataInicio);
+    if (rawValue.dataFim) rawValue.dataFim = formatarData(rawValue.dataFim);
+
     // Filtra para mandar para a API apenas os campos que o usuário preencheu
     const filtroLimpo = Object.fromEntries(
       Object.entries(rawValue).filter(([_, value]) => value !== null && value !== '')

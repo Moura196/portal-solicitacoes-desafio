@@ -1,6 +1,6 @@
 # Portal de Solicitações
 
-**Versão:** 1.0.0
+**Versão:** 1.1.0
 **Status:** Release Inicial
 
 O **Portal de Solicitações** é uma aplicação web Full Stack desenvolvida para gerenciar, visualizar e acompanhar solicitações em tempo real. O sistema visa oferecer uma interface limpa, responsiva e de alta performance, aliada a um backend robusto capaz de processar as regras de negócio de forma eficiente.
