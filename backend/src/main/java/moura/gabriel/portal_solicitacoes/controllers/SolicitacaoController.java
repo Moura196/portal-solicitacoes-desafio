@@ -3,7 +3,7 @@ package moura.gabriel.portal_solicitacoes.controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,9 +23,9 @@ import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoRequestDTO;
 import moura.gabriel.portal_solicitacoes.dtos.SolicitacaoResponseDTO;
 import moura.gabriel.portal_solicitacoes.models.Solicitacao;
 import moura.gabriel.portal_solicitacoes.models.Status;
+import moura.gabriel.portal_solicitacoes.models.Usuario;
 import moura.gabriel.portal_solicitacoes.services.SolicitacaoService;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/solicitacoes")
 public class SolicitacaoController {
@@ -39,9 +39,11 @@ public class SolicitacaoController {
     @PostMapping("/cadastrar")
     public ResponseEntity<SolicitacaoResponseDTO> criarSolicitacao(
         @Valid @RequestBody SolicitacaoRequestDTO solicitacaoDTO) {
-        // TODO: Provisório: passamos o ID 1L diretamente, já que ainda não tenho o Spring Security
-        Long usuarioMockId = 1L;
-        Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioMockId);
+        
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long usuarioId = usuarioLogado.getId();
+        
+        Solicitacao solicitacao = solicitacaoService.criarSolicitacao(solicitacaoDTO, usuarioId);
         return ResponseEntity.ok(solicitacaoService.converterParaDTO(solicitacao));
     }
 
