@@ -48,7 +48,6 @@ export class SolicitacaoCardComponente {
 
     ref.afterClosed().subscribe(houveModificacao => {
       if (houveModificacao) {
-        // Atualiza os filtros atuais para buscar a nova lista de solicitação na Home
         const filtrosAtuais = this.solicitacaoService.filtroAtual();
         this.solicitacaoService.filtroAtual.set({ ...filtrosAtuais });
       }
