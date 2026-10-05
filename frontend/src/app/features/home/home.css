@@ -105,3 +105,53 @@
     flex-direction: column;
     gap: 16px;
 }
+
+/* --- Adaptações para Cabeçalho com Collapse --- */
+.queue-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.queue-title-wrapper:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+.queue-title-wrapper.concluido {
+    border-color: var(--status-concluido-text);
+}
+
+.queue-title.no-border {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* --- Active Filters Banner --- */
+.active-filters-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #FFFBEB;
+    border-left: 4px solid #F59E0B;
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.active-filters-banner mat-icon {
+    color: #F59E0B;
+}
+
+.active-filters-banner span {
+    flex-grow: 1;
+    color: #92400E;
+    font-weight: 500;
+}
