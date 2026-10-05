@@ -19,6 +19,10 @@ export class SolicitacaoService {
 
   filtroAtual = signal<SolicitacaoFiltro>({});
 
+  recarregarLista() {
+    this.filtroAtual.set({ ...this.filtroAtual() });
+  }
+
   criarSolicitacao(solicitacao: SolicitacaoRequest): Observable<Solicitacao> {
     return this.http.post<Solicitacao>(`${this.apiUrl}/cadastrar`, solicitacao);
   }

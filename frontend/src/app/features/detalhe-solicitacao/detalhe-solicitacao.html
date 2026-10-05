@@ -54,7 +54,7 @@
     </button>
     }
     <button mat-button (click)="fechar()">Cancelar</button>
-    <button mat-flat-button color="primary" [disabled]="form.invalid || form.pristine" (click)="salvar()">
+    <button mat-flat-button color="primary" [disabled]="form.invalid || !houveAlteracao()" (click)="salvar()">
         Salvar Alterações
     </button>
 </mat-dialog-actions>
