@@ -84,8 +84,8 @@ A segurança do projeto está totalmente operacional de ponta a ponta:
 Nesta primeira entrega, os seguintes diferenciais arquiteturais e visuais foram implementados:
 
 *   ✅ **Responsividade Avançada com CSS Puro:** Não utilizamos bibliotecas como Bootstrap ou Tailwind. Todo o sistema de design (variáveis, grid, flexbox, responsividade) foi criado "do zero", desenvolvendo domínio de UI/UX e CSS.
+*   ✅ **Testes Automatizados Unitários:** Cobertura de testes implementada estrategicamente nos *Services* e *Controllers* (Backend) e nos *Services*, *Guards* e *Interceptors* (Frontend), focando nas lógicas de negócio e segurança.
 *   *(Opcional)* Docker e Docker Compose (Em processo de estruturação).
-*   *(Opcional)* Testes Automatizados Unitários (Em processo de estruturação).
 *   *(Opcional)* CI/CD (GitHub Actions) (Em processo de estruturação).
 
 ---
