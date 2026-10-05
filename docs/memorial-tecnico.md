@@ -1,7 +1,7 @@
 # Memorial Técnico de Desenvolvimento
 
 **Projeto:** Portal de Solicitações
-**Versão:** 1.0.0
+**Versão:** 1.1.0
 
 Este memorial tem como objetivo demonstrar o processo decisório, as escolhas tecnológicas e arquiteturais, e a visão crítica aplicada durante o desenvolvimento da versão inicial do Portal de Solicitações.
 
@@ -95,4 +95,4 @@ Em um processo de avaliação honesta, reconheço as seguintes limitações nest
 *   **Estratégia de Cache e Paginação:** Atualmente, a busca retorna conjuntos inteiros de dados. É imperativo implementar Paginação (*Pageable* do Spring Data) na API e cache (ex: Redis) para endpoints de leitura frequente visando escalabilidade para milhões de registros.
 *   **Pipelines de CI/CD:** A construção e o deploy estão manuais. O próximo passo de infraestrutura seria a criação de rotinas no GitHub Actions para garantir a execução de *linters*, testes e build automatizado em containers Docker (com o Dockerfile e docker-compose.yml que serão implementados).
 
-O projeto, em sua concepção atual (1.0.0), cumpre rigorosamente os requisitos fundamentais de estruturação, qualidade de código e domínio tecnológico exigidos.
+O projeto, em sua concepção atual (1.1.0), cumpre rigorosamente os requisitos fundamentais de estruturação, qualidade de código e domínio tecnológico exigidos.
