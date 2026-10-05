@@ -65,16 +65,19 @@ Na página Home (listagem do dashboard), adotamos o padrão de "Live Filtering".
 ### 3.4. Tratamento de Exceções Global (Backend)
 Para garantir uma API robusta e padronizada, implementamos um `GlobalExceptionHandler` utilizando a anotação `@RestControllerAdvice`. Isso permite capturar qualquer erro lançado pela aplicação de forma centralizada e devolver um objeto JSON limpo e padronizado para o frontend, emulando o padrão *Problem Details*.
 
+### 3.5. Boas Práticas de Injeção de Dependências (SOLID)
+Por toda a aplicação (incluindo Controllers, Services e módulos de Segurança), a injeção de dependências via campos (`@Autowired`) foi evitada. Adotou-se, de forma padronizada, a **Injeção via Construtor** com variáveis `final`. Esta decisão de design arquitetural favorece o princípio de imutabilidade, tornando explícitas as dependências obrigatórias das classes e facilitando imensamente a criação de cenários de testes unitários sem a necessidade de frameworks de reflexão.
+
 ---
 
-## 4. Estratégia de Autenticação (Planejamento)
+## 4. Estratégia de Autenticação
 
-A versão 1.0.0 foi desenhada com foco na estrutura e no domínio visual da aplicação, postergando o bloqueio de acessos. No entanto, a arquitetura já prevê o encaixe do módulo de segurança:
+A segurança da aplicação foi implementada utilizando **Spring Security** em conjunto com **Tokens JWT (JSON Web Token)**.
 
-1.  **Backend:** Será implementado o `Spring Security`. Um filtro interceptará requisições, validando um Token JWT. O usuário e suas permissões (Roles) estarão modelados no PostgreSQL.
-2.  **Frontend:** Um `HttpInterceptor` adicionará automaticamente o cabeçalho `Authorization: Bearer <token>` em todas as chamadas. A proteção de telas se dará através da interface `CanActivate` nas rotas do Angular.
-
-Essa etapa iniciará o ciclo de desenvolvimento da branch `feature/auth` para a versão `1.1.0`.
+1.  **Backend (Filtro e Autenticação):** Desenvolvemos um filtro customizado (`SecurityFilter`) que intercepta requisições, valida a presença e a integridade do JWT, e autentica o usuário no contexto do Spring (`SecurityContextHolder`). Isso mantém a aplicação *stateless* e escalável.
+2.  **Gestão de Segredos (Decisão Arquitetural):** O `TokenService` utiliza a propriedade `api.security.token.secret` para assinar os tokens. Optou-se por definir um valor default diretamente via anotação (`@Value("${api.security.token.secret:my-secret-key-super-secure}")`). **Justificativa técnica:** Para fins de avaliação técnica e execução local, essa abordagem permite que o avaliador rode a aplicação sem a necessidade de configurar variáveis de ambiente na sua máquina. Em um cenário de Produção corporativo, a boa prática mandaria remover o fallback da anotação e injetar essa chave estritamente através de variáveis de ambiente seguras (ex: AWS Secrets Manager, GitHub Secrets ou `.env`), blindando o algoritmo de assinatura.
+3.  **Tratamento de Exceções no Nível de Filtro:** Problemas comuns de JWT (como tokens expirados ou malformados) estouram no nível do filtro (antes de chegar aos Controllers). Para não perder o padrão de resposta da API, injetamos o `HandlerExceptionResolver` diretamente no filtro. Dessa forma, as exceções geradas no filtro são delegadas e tratadas de forma padronizada pelo `GlobalExceptionHandler`, retornando respostas JSON consistentes com HTTP Status 401.
+4.  **Configurações de Proteção e CORS:** O modelo de sessão foi explicitamente configurado como `STATELESS` e a proteção contra CSRF foi desabilitada, uma vez que a autenticação baseada em JWT não depende de cookies de sessão (mitigando nativamente ataques CSRF). As regras de CORS foram definidas explicitamente, inclusive liberando as requisições *Preflight* (`OPTIONS`) necessárias para que os navegadores permitam chamadas vindas da aplicação Angular.
 
 ---
 
