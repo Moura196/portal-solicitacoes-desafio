@@ -61,6 +61,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity<ErrorResponseDTO> handleTokenInvalido(TokenInvalidoException e) {
+        ErrorResponseDTO erro = new ErrorResponseDTO(e.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenerico(Exception e) {
         ErrorResponseDTO erro = new ErrorResponseDTO(
