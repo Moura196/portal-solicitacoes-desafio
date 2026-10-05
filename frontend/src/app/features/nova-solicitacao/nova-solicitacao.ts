@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-nova-solicitacao',
@@ -26,6 +27,7 @@ export class NovaSolicitacaoCompomente {
   private fb = inject(FormBuilder);
   private solicitacaoService = inject(SolicitacaoService);
   private dialogRef = inject(MatDialogRef<NovaSolicitacaoCompomente>);
+  private notificationService = inject(NotificationService);
 
   categorias = Object.keys(CATEGORIA) as Categoria[];
   categoriaLabels = CATEGORIA;
@@ -44,7 +46,7 @@ export class NovaSolicitacaoCompomente {
         this.dialogRef.close(novaSolicitacao);
       },
       error: (err: any) => {
-        console.error('Erro ao criar solicitação', err);
+        this.notificationService.error('Erro ao criar solicitação', err.error);
       }
     });
   }

@@ -16,6 +16,8 @@ public class FlywayConfig {
                 .schemas("desafio")
                 .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
+                .ignoreMigrationPatterns("*:missing")
+                .validateOnMigrate(false)
                 .load();
     }
 }

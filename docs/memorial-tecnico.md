@@ -1,7 +1,7 @@
 # Memorial Técnico de Desenvolvimento
 
 **Projeto:** Portal de Solicitações
-**Versão:** 1.0.0
+**Versão:** 1.1.0
 
 Este memorial tem como objetivo demonstrar o processo decisório, as escolhas tecnológicas e arquiteturais, e a visão crítica aplicada durante o desenvolvimento da versão inicial do Portal de Solicitações.
 
@@ -60,30 +60,51 @@ Na página Home (listagem do dashboard), adotamos o padrão de "Live Filtering".
 
 ### 3.3. Organização em Camadas (Backend e Frontend)
 *   **Backend (Arquitetura em N-Camadas):** Adotamos a clássica separação `Controller` (Interface HTTP) -> `Service` (Regras de Negócio) -> `Repository` (Acesso a Dados). Isso garante o princípio da Responsabilidade Única (SRP).
-*   **Frontend (Feature-Driven):** Organizado em pastas bem definidas: `/core` (layout como a Navbar, modelos e serviços globais), `/shared` (componentes reutilizáveis como o `solicitacao-card`) e `/features` (os módulos de negócio independentes, como `home`, `consulta-solicitacao` e `nova-solicitacao`).
+*   **Frontend (Feature-Driven):** Organizado em pastas bem definidas: `/core` (layout como a Navbar, modelos e serviços globais), `/shared` (componentes reutilizáveis como o `solicitacao-card` e modais padronizados) e `/features` (os módulos de negócio independentes, como `home`, `consulta-solicitacao`, `login` e `nova-solicitacao`).
 
-### 3.4. Tratamento de Exceções Global (Backend)
+### 3.4. Experiência do Usuário (UX) e Notificações Globais
+Para garantir uma navegação fluida, criamos um `NotificationService` injetável em toda a aplicação utilizando o `MatSnackBar`. 
+*   **Tratamento Amigável de Erros:** O serviço abstrai as respostas do backend, transformando códigos HTTP de validação (400) em toasts na tela com mensagens compreensíveis. 
+*   **Feedback Imediato:** Modais de criação e detalhamento se comunicam via `dialogRef.close(true)`. Ao confirmar a alteração, a listagem reage imediatamente consumindo a API novamente no background (Live Reloading), dispensando atualizações manuais de página (F5) pelo usuário. O uso de modais de confirmação padronizados (`ConfirmDialogComponent`) assegura que ações destrutivas (ex: deletar solicitação) tenham fricção adequada.
+
+### 3.5. Tratamento de Exceções Global (Backend)
 Para garantir uma API robusta e padronizada, implementamos um `GlobalExceptionHandler` utilizando a anotação `@RestControllerAdvice`. Isso permite capturar qualquer erro lançado pela aplicação de forma centralizada e devolver um objeto JSON limpo e padronizado para o frontend, emulando o padrão *Problem Details*.
 
----
-
-## 4. Estratégia de Autenticação (Planejamento)
-
-A versão 1.0.0 foi desenhada com foco na estrutura e no domínio visual da aplicação, postergando o bloqueio de acessos. No entanto, a arquitetura já prevê o encaixe do módulo de segurança:
-
-1.  **Backend:** Será implementado o `Spring Security`. Um filtro interceptará requisições, validando um Token JWT. O usuário e suas permissões (Roles) estarão modelados no PostgreSQL.
-2.  **Frontend:** Um `HttpInterceptor` adicionará automaticamente o cabeçalho `Authorization: Bearer <token>` em todas as chamadas. A proteção de telas se dará através da interface `CanActivate` nas rotas do Angular.
-
-Essa etapa iniciará o ciclo de desenvolvimento da branch `feature/auth` para a versão `1.1.0`.
+### 3.6. Boas Práticas de Injeção de Dependências (SOLID)
+Por toda a aplicação (incluindo Controllers, Services e módulos de Segurança), a injeção de dependências via campos (`@Autowired`) foi evitada. Adotou-se, de forma padronizada, a **Injeção via Construtor** com variáveis `final`. Esta decisão de design arquitetural favorece o princípio de imutabilidade, tornando explícitas as dependências obrigatórias das classes e facilitando imensamente a criação de cenários de testes unitários sem a necessidade de frameworks de reflexão.
 
 ---
 
-## 5. Análise Crítica
+## 4. Estratégia de Autenticação
+
+A segurança da aplicação foi implementada utilizando **Spring Security** em conjunto com **Tokens JWT (JSON Web Token)**.
+
+1.  **Backend (Filtro e Autenticação):** Desenvolvemos um filtro customizado (`SecurityFilter`) que intercepta requisições, valida a presença e a integridade do JWT, e autentica o usuário no contexto do Spring (`SecurityContextHolder`). Isso mantém a aplicação *stateless* e escalável.
+2.  **Gestão de Segredos (Decisão Arquitetural):** O `TokenService` utiliza a propriedade `api.security.token.secret` para assinar os tokens. Optou-se por definir um valor default diretamente via anotação (`@Value("${api.security.token.secret:my-secret-key-super-secure}")`). **Justificativa técnica:** Para fins de avaliação técnica e execução local, essa abordagem permite que o avaliador rode a aplicação sem a necessidade de configurar variáveis de ambiente na sua máquina. Em um cenário de Produção corporativo, a boa prática mandaria remover o fallback da anotação e injetar essa chave estritamente através de variáveis de ambiente seguras (ex: AWS Secrets Manager, GitHub Secrets ou `.env`), blindando o algoritmo de assinatura.
+3.  **Tratamento de Exceções no Nível de Filtro:** Problemas comuns de JWT (como tokens expirados ou malformados) estouram no nível do filtro (antes de chegar aos Controllers). Para não perder o padrão de resposta da API, injetamos o `HandlerExceptionResolver` diretamente no filtro. Dessa forma, as exceções geradas no filtro são delegadas e tratadas de forma padronizada pelo `GlobalExceptionHandler`, retornando respostas JSON consistentes com HTTP Status 401.
+4.  **Configurações de Proteção e CORS:** O modelo de sessão foi explicitamente configurado como `STATELESS` e a proteção contra CSRF foi desabilitada, uma vez que a autenticação baseada em JWT não depende de cookies de sessão (mitigando nativamente ataques CSRF). As regras de CORS foram definidas explicitamente, inclusive liberando as requisições *Preflight* (`OPTIONS`) necessárias para que os navegadores permitam chamadas vindas da aplicação Angular.
+5.  **Frontend (Angular):** A autenticação no cliente é gerenciada por um `AuthService` que realiza a requisição de login e salva o Token JWT no `localStorage`. Utilizamos *Angular Signals* (`signal<boolean>`) para manter o estado reativo da sessão na interface gráfica. Protegemos as rotas privadas (como a Dashboard) utilizando um `AuthGuard` funcional. Além disso, implementamos um `AuthInterceptor` funcional que anexa o cabeçalho `Authorization: Bearer <token>` automaticamente em todas as requisições HTTP caso o usuário esteja autenticado, garantindo a comunicação segura e simplificada com a API.
+
+---
+
+## 5. Metodologia de Desenvolvimento Assistida por IA
+
+O desenvolvimento deste portal contou com o suporte de ferramentas de Inteligência Artificial Generativa. Para garantir que o uso da IA não se transformasse em geração de código descontrolada ("vibe coding"), adotou-se uma abordagem rigorosa de **Engenharia de Prompt e Gestão de Agentes**:
+
+*   **Documentação de Escopo:** Foram criados e mantidos artefatos específicos (`checklist-desenvolvimento.md`, `descricao-desafio.md`, `diretrizes-agente.md`, `requisitos-desafio.md`) para servir como base de conhecimento (contexto) e guiar o comportamento da IA.
+*   **Controle Arquitetural:** O documento de diretrizes foi fundamental para impor regras como o uso de Standalone Components no Angular e a Injeção de Dependência via construtor no Spring Boot. Isso garantiu que o código gerasse soluções dentro dos padrões arquiteturais predefinidos, e não de forma aleatória.
+*   **Revisão Crítica Humana:** A IA atuou como ferramenta aceleradora (pair programming), mas todas as decisões de arquitetura, fluxo de telas e aprovação do código foram estritamente arquitetadas e validadas através de intervenção humana, comprovando domínio sobre a stack tecnológica.
+
+---
+
+## 6. Análise Crítica
 
 Em um processo de avaliação honesta, reconheço as seguintes limitações nesta entrega inicial e as melhorias que seriam implementadas em um cenário corporativo de produção real:
 
 *   **Ausência de Testes Automatizados:** O foco inicial foi a entrega de valor funcional. Em um ambiente corporativo, a adoção de TDD ou cobertura via JUnit (Backend) e Jasmine/Jest (Frontend) é mandatória antes de qualquer *merge* para a branch principal.
 *   **Estratégia de Cache e Paginação:** Atualmente, a busca retorna conjuntos inteiros de dados. É imperativo implementar Paginação (*Pageable* do Spring Data) na API e cache (ex: Redis) para endpoints de leitura frequente visando escalabilidade para milhões de registros.
 *   **Pipelines de CI/CD:** A construção e o deploy estão manuais. O próximo passo de infraestrutura seria a criação de rotinas no GitHub Actions para garantir a execução de *linters*, testes e build automatizado em containers Docker (com o Dockerfile e docker-compose.yml que serão implementados).
+*   **Evolução no Uso de IA e Compartilhamento de Contexto:** Embora a base de conhecimento auxiliar tenha guiado o desenvolvimento individual com sucesso, o próximo passo para escalar a equipe seria padronizar essas diretrizes em arquivos nativos de repositório (como `.github/copilot-instructions.md` ou `.cursorrules`). Além disso, poderíamos integrar essas regras arquiteturais em bots de *AI Code Review* no pipeline, garantindo que o código gerado por qualquer desenvolvedor do time passe por um crivo automático antes do merge.
+*   **Maturidade no Versionamento de Código:** Atualmente o projeto segue o modelo *Git Flow*, que é excelente para releases muito estruturadas. Contudo, em um cenário focado em entregas contínuas e de alta cadência (*Continuous Deployment*), uma evolução arquitetural seria a transição para **Trunk-Based Development** aliado ao uso de *Feature Flags*. Complementar a isso, a integração de ferramentas de *Semantic Release* poderia automatizar o versionamento e a geração de *Changelogs* utilizando as tags de *Conventional Commits* (ex: `feat:`, `docs:`) já praticadas neste repositório.
 
-O projeto, em sua concepção atual (1.0.0), cumpre rigorosamente os requisitos fundamentais de estruturação, qualidade de código e domínio tecnológico exigidos.
+O projeto, em sua concepção atual (1.1.0), cumpre rigorosamente os requisitos fundamentais de estruturação, qualidade de código e domínio tecnológico exigidos.

@@ -7,7 +7,6 @@
     z-index: 1000;
     padding: 0 24px;
     height: 72px;
-    /* Um pouco mais alto que o padrão para uma sensação premium */
     display: flex;
     justify-content: space-between;
 }

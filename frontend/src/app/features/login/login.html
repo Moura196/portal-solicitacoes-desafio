@@ -1,0 +1,38 @@
+<div class="login-container">
+  <mat-card class="login-card premium-card">
+    <mat-card-header class="login-header">
+      <div mat-card-avatar class="header-icon">
+        <mat-icon color="primary" style="transform: scale(1.5);">lock</mat-icon>
+      </div>
+      <mat-card-title>Portal de Solicitações</mat-card-title>
+      <mat-card-subtitle>Faça login para continuar</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="Digite seu email">
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            O email é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="senha" placeholder="Digite sua senha">
+          <mat-error *ngIf="loginForm.get('senha')?.hasError('required')">
+            A senha é obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid"
+          class="submit-btn full-width">
+          Entrar
+        </button>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

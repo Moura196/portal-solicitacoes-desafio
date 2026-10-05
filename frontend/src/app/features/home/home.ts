@@ -3,12 +3,14 @@ import { SolicitacaoService } from '../../core/services/solicitacao.service';
 import { DashboardMetricas } from '../../core/models/dashboard-metrics';
 import { Solicitacao } from '../../core/models/solicitacao';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { SolicitacaoCardComponente } from '../../shared/components/solicitacao-card/solicitacao-card';
 
 @Component({
   selector: 'app-home',
   imports: [
     MatIconModule,
+    MatButtonModule,
     SolicitacaoCardComponente
   ],
   templateUrl: './home.html',
@@ -24,6 +26,21 @@ export class HomeComponente implements OnInit {
   abertas = computed(() => this.solicitacoes().filter(s => s.status === 'ABERTO'));
   emAtendimento = computed(() => this.solicitacoes().filter(s => s.status === 'EM_ATENDIMENTO'));
   concluidas = computed(() => this.solicitacoes().filter(s => s.status === 'CONCLUIDO'));
+
+  isConcluidasCollapsed = signal(false);
+
+  hasActiveFilters = computed(() => {
+    const f = this.solicitacaoService.filtroAtual();
+    return !!(f.categoria || f.status || f.titulo || f.dataInicio || f.dataFim);
+  });
+
+  toggleConcluidas(): void {
+    this.isConcluidasCollapsed.update(val => !val);
+  }
+
+  clearFilters(): void {
+    this.solicitacaoService.filtroAtual.set({});
+  }
 
   constructor() {
     effect(() => {
