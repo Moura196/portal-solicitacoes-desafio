@@ -60,12 +60,17 @@ Na página Home (listagem do dashboard), adotamos o padrão de "Live Filtering".
 
 ### 3.3. Organização em Camadas (Backend e Frontend)
 *   **Backend (Arquitetura em N-Camadas):** Adotamos a clássica separação `Controller` (Interface HTTP) -> `Service` (Regras de Negócio) -> `Repository` (Acesso a Dados). Isso garante o princípio da Responsabilidade Única (SRP).
-*   **Frontend (Feature-Driven):** Organizado em pastas bem definidas: `/core` (layout como a Navbar, modelos e serviços globais), `/shared` (componentes reutilizáveis como o `solicitacao-card`) e `/features` (os módulos de negócio independentes, como `home`, `consulta-solicitacao` e `nova-solicitacao`).
+*   **Frontend (Feature-Driven):** Organizado em pastas bem definidas: `/core` (layout como a Navbar, modelos e serviços globais), `/shared` (componentes reutilizáveis como o `solicitacao-card` e modais padronizados) e `/features` (os módulos de negócio independentes, como `home`, `consulta-solicitacao`, `login` e `nova-solicitacao`).
 
-### 3.4. Tratamento de Exceções Global (Backend)
+### 3.4. Experiência do Usuário (UX) e Notificações Globais
+Para garantir uma navegação fluida, criamos um `NotificationService` injetável em toda a aplicação utilizando o `MatSnackBar`. 
+*   **Tratamento Amigável de Erros:** O serviço abstrai as respostas do backend, transformando códigos HTTP de validação (400) em toasts na tela com mensagens compreensíveis. 
+*   **Feedback Imediato:** Modais de criação e detalhamento se comunicam via `dialogRef.close(true)`. Ao confirmar a alteração, a listagem reage imediatamente consumindo a API novamente no background (Live Reloading), dispensando atualizações manuais de página (F5) pelo usuário. O uso de modais de confirmação padronizados (`ConfirmDialogComponent`) assegura que ações destrutivas (ex: deletar solicitação) tenham fricção adequada.
+
+### 3.5. Tratamento de Exceções Global (Backend)
 Para garantir uma API robusta e padronizada, implementamos um `GlobalExceptionHandler` utilizando a anotação `@RestControllerAdvice`. Isso permite capturar qualquer erro lançado pela aplicação de forma centralizada e devolver um objeto JSON limpo e padronizado para o frontend, emulando o padrão *Problem Details*.
 
-### 3.5. Boas Práticas de Injeção de Dependências (SOLID)
+### 3.6. Boas Práticas de Injeção de Dependências (SOLID)
 Por toda a aplicação (incluindo Controllers, Services e módulos de Segurança), a injeção de dependências via campos (`@Autowired`) foi evitada. Adotou-se, de forma padronizada, a **Injeção via Construtor** com variáveis `final`. Esta decisão de design arquitetural favorece o princípio de imutabilidade, tornando explícitas as dependências obrigatórias das classes e facilitando imensamente a criação de cenários de testes unitários sem a necessidade de frameworks de reflexão.
 
 ---
@@ -78,6 +83,7 @@ A segurança da aplicação foi implementada utilizando **Spring Security** em c
 2.  **Gestão de Segredos (Decisão Arquitetural):** O `TokenService` utiliza a propriedade `api.security.token.secret` para assinar os tokens. Optou-se por definir um valor default diretamente via anotação (`@Value("${api.security.token.secret:my-secret-key-super-secure}")`). **Justificativa técnica:** Para fins de avaliação técnica e execução local, essa abordagem permite que o avaliador rode a aplicação sem a necessidade de configurar variáveis de ambiente na sua máquina. Em um cenário de Produção corporativo, a boa prática mandaria remover o fallback da anotação e injetar essa chave estritamente através de variáveis de ambiente seguras (ex: AWS Secrets Manager, GitHub Secrets ou `.env`), blindando o algoritmo de assinatura.
 3.  **Tratamento de Exceções no Nível de Filtro:** Problemas comuns de JWT (como tokens expirados ou malformados) estouram no nível do filtro (antes de chegar aos Controllers). Para não perder o padrão de resposta da API, injetamos o `HandlerExceptionResolver` diretamente no filtro. Dessa forma, as exceções geradas no filtro são delegadas e tratadas de forma padronizada pelo `GlobalExceptionHandler`, retornando respostas JSON consistentes com HTTP Status 401.
 4.  **Configurações de Proteção e CORS:** O modelo de sessão foi explicitamente configurado como `STATELESS` e a proteção contra CSRF foi desabilitada, uma vez que a autenticação baseada em JWT não depende de cookies de sessão (mitigando nativamente ataques CSRF). As regras de CORS foram definidas explicitamente, inclusive liberando as requisições *Preflight* (`OPTIONS`) necessárias para que os navegadores permitam chamadas vindas da aplicação Angular.
+5.  **Frontend (Angular):** A autenticação no cliente é gerenciada por um `AuthService` que realiza a requisição de login e salva o Token JWT no `localStorage`. Utilizamos *Angular Signals* (`signal<boolean>`) para manter o estado reativo da sessão na interface gráfica. Protegemos as rotas privadas (como a Dashboard) utilizando um `AuthGuard` funcional. Além disso, implementamos um `AuthInterceptor` funcional que anexa o cabeçalho `Authorization: Bearer <token>` automaticamente em todas as requisições HTTP caso o usuário esteja autenticado, garantindo a comunicação segura e simplificada com a API.
 
 ---
 
