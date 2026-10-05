@@ -87,12 +87,24 @@ A segurança da aplicação foi implementada utilizando **Spring Security** em c
 
 ---
 
-## 5. Análise Crítica
+## 5. Metodologia de Desenvolvimento Assistida por IA
+
+O desenvolvimento deste portal contou com o suporte de ferramentas de Inteligência Artificial Generativa. Para garantir que o uso da IA não se transformasse em geração de código descontrolada ("vibe coding"), adotou-se uma abordagem rigorosa de **Engenharia de Prompt e Gestão de Agentes**:
+
+*   **Documentação de Escopo:** Foram criados e mantidos artefatos específicos (`checklist-desenvolvimento.md`, `descricao-desafio.md`, `diretrizes-agente.md`, `requisitos-desafio.md`) para servir como base de conhecimento (contexto) e guiar o comportamento da IA.
+*   **Controle Arquitetural:** O documento de diretrizes foi fundamental para impor regras como o uso de Standalone Components no Angular e a Injeção de Dependência via construtor no Spring Boot. Isso garantiu que o código gerasse soluções dentro dos padrões arquiteturais predefinidos, e não de forma aleatória.
+*   **Revisão Crítica Humana:** A IA atuou como ferramenta aceleradora (pair programming), mas todas as decisões de arquitetura, fluxo de telas e aprovação do código foram estritamente arquitetadas e validadas através de intervenção humana, comprovando domínio sobre a stack tecnológica.
+
+---
+
+## 6. Análise Crítica
 
 Em um processo de avaliação honesta, reconheço as seguintes limitações nesta entrega inicial e as melhorias que seriam implementadas em um cenário corporativo de produção real:
 
 *   **Ausência de Testes Automatizados:** O foco inicial foi a entrega de valor funcional. Em um ambiente corporativo, a adoção de TDD ou cobertura via JUnit (Backend) e Jasmine/Jest (Frontend) é mandatória antes de qualquer *merge* para a branch principal.
 *   **Estratégia de Cache e Paginação:** Atualmente, a busca retorna conjuntos inteiros de dados. É imperativo implementar Paginação (*Pageable* do Spring Data) na API e cache (ex: Redis) para endpoints de leitura frequente visando escalabilidade para milhões de registros.
 *   **Pipelines de CI/CD:** A construção e o deploy estão manuais. O próximo passo de infraestrutura seria a criação de rotinas no GitHub Actions para garantir a execução de *linters*, testes e build automatizado em containers Docker (com o Dockerfile e docker-compose.yml que serão implementados).
+*   **Evolução no Uso de IA e Compartilhamento de Contexto:** Embora a base de conhecimento auxiliar tenha guiado o desenvolvimento individual com sucesso, o próximo passo para escalar a equipe seria padronizar essas diretrizes em arquivos nativos de repositório (como `.github/copilot-instructions.md` ou `.cursorrules`). Além disso, poderíamos integrar essas regras arquiteturais em bots de *AI Code Review* no pipeline, garantindo que o código gerado por qualquer desenvolvedor do time passe por um crivo automático antes do merge.
+*   **Maturidade no Versionamento de Código:** Atualmente o projeto segue o modelo *Git Flow*, que é excelente para releases muito estruturadas. Contudo, em um cenário focado em entregas contínuas e de alta cadência (*Continuous Deployment*), uma evolução arquitetural seria a transição para **Trunk-Based Development** aliado ao uso de *Feature Flags*. Complementar a isso, a integração de ferramentas de *Semantic Release* poderia automatizar o versionamento e a geração de *Changelogs* utilizando as tags de *Conventional Commits* (ex: `feat:`, `docs:`) já praticadas neste repositório.
 
 O projeto, em sua concepção atual (1.1.0), cumpre rigorosamente os requisitos fundamentais de estruturação, qualidade de código e domínio tecnológico exigidos.
