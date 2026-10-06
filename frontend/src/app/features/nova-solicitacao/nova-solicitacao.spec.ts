@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NovaSolicitacaoCompomente } from './nova-solicitacao';
 
 describe('NovaSolicitacao', () => {
@@ -8,7 +9,12 @@ describe('NovaSolicitacao', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NovaSolicitacaoCompomente]
+      imports: [NovaSolicitacaoCompomente],
+      providers: [
+        provideNoopAnimations(),
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
     })
       .compileComponents();
 

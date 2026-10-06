@@ -4,6 +4,16 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), 
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.2.0] - 2026-10-05
+
+### Added
+- Implementação de testes unitários no Frontend e Backend.
+- Preparação do ambiente DevOps com Docker.
+- Atualização e finalização da documentação do projeto.
+
+### Changed
+- Atualização de versão de 1.1.0 para 1.2.0 (Release Final).
+
 ## [1.1.0] - 2026-10-05
 
 ### Added
