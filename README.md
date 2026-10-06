@@ -1,6 +1,6 @@
 # Portal de Solicitações
 
-**Versão:** 1.2.0
+**Versão:** 1.3.0
 **Status:** Release Final
 
 O **Portal de Solicitações** é uma aplicação web Full Stack desenvolvida para gerenciar, visualizar e acompanhar solicitações em tempo real. O sistema visa oferecer uma interface limpa, responsiva e de alta performance, aliada a um backend robusto capaz de processar as regras de negócio de forma eficiente.
@@ -23,8 +23,8 @@ Caso prefira rodar manualmente sem Docker, você precisará de:
 
 ## ⚙️ Configuração & Credenciais de Demonstração
 
-> O sistema possui bloqueio de rotas e segurança completa via JWT. Para acessar e avaliar, utilize as credenciais pré-cadastradas automaticamente pelas migrações do Flyway:
-*   **E-mail:** avaliador@bitsolucoes.com
+> O sistema possui bloqueio de rotas e segurança completa via JWT. Para acessar e avaliar o sistema já populado com dados fictícios, utilize a seguinte credencial pré-cadastrada automaticamente pelo Flyway:
+*   **E-mail:** frederico@techreviewers.com
 *   **Senha:** 123456
 
 ---
@@ -45,7 +45,7 @@ Isso iniciará o Banco de Dados, compilará o Backend e o Frontend, servindo a a
 ### Opção 2: Execução Manual
 
 #### 1. Banco de Dados
-Certifique-se de que o PostgreSQL está rodando na porta padrão (`5432`) e o banco de dados `portal_solicitacoes_db` foi criado com usuário `root` e senha `password` (conforme `application.properties`).
+Certifique-se de que o PostgreSQL está rodando na porta padrão (`5432`) e crie um banco de dados vazio chamado `portal_solicitacoes`. O usuário e senha configurados por padrão na aplicação são `postgres` e `postgres` (podem ser alterados no `application.properties`). As tabelas e dados iniciais serão gerados automaticamente pelo Flyway ao iniciar o backend.
 
 #### 2. Backend (Java - Spring Boot)
 Abra um terminal na pasta `/backend`:
@@ -76,7 +76,7 @@ A segurança do projeto está totalmente operacional de ponta a ponta:
 
 ## ✨ Diferenciais Implementados
 
-Nesta entrega final (1.2.0), todos os diferenciais solicitados foram implementados com foco na qualidade corporativa:
+Nesta entrega final (1.3.0), todos os diferenciais solicitados foram implementados com foco na qualidade corporativa:
 
 *   ✅ **Responsividade Avançada com CSS Puro:** Sistema de design desenvolvido "do zero" (variáveis, flexbox, CSS moderno).
 *   ✅ **Testes Automatizados Unitários:** Cobertura de testes implementada nos *Services*, *Controllers* (Backend) via JUnit/Mockito, e no Frontend (*Interceptors*) via Vitest.

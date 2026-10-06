@@ -4,6 +4,19 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato baseia-se no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/), 
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.3.0] - 2026-10-05
+
+### Added
+- Configuração de Service Container (PostgreSQL 15) no GitHub Actions para testes de integração.
+
+### Changed
+- Atualização e otimização da esteira de CI (Continuous Integration) com boas práticas de mercado (`actions@v4`, `npm ci`, `mvn -B`).
+- Versão do projeto atualizada para 1.3.0.
+
+### Fixed
+- Correção na configuração de CORS (`SecurityConfig`) permitindo comunicação do Nginx (`http://localhost`) no Docker.
+- Resolução de conflito entre Hibernate (`DDL_AUTO`) e Flyway na inicialização do contêiner Docker.
+
 ## [1.2.0] - 2026-10-05
 
 ### Added
