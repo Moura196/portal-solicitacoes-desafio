@@ -1,6 +1,6 @@
 # Portal de Solicitações
 
-**Versão:** 1.2.0
+**Versão:** 1.3.0
 **Status:** Release Final
 
 O **Portal de Solicitações** é uma aplicação web Full Stack desenvolvida para gerenciar, visualizar e acompanhar solicitações em tempo real. O sistema visa oferecer uma interface limpa, responsiva e de alta performance, aliada a um backend robusto capaz de processar as regras de negócio de forma eficiente.
@@ -76,7 +76,7 @@ A segurança do projeto está totalmente operacional de ponta a ponta:
 
 ## ✨ Diferenciais Implementados
 
-Nesta entrega final (1.2.0), todos os diferenciais solicitados foram implementados com foco na qualidade corporativa:
+Nesta entrega final (1.3.0), todos os diferenciais solicitados foram implementados com foco na qualidade corporativa:
 
 *   ✅ **Responsividade Avançada com CSS Puro:** Sistema de design desenvolvido "do zero" (variáveis, flexbox, CSS moderno).
 *   ✅ **Testes Automatizados Unitários:** Cobertura de testes implementada nos *Services*, *Controllers* (Backend) via JUnit/Mockito, e no Frontend (*Interceptors*) via Vitest.
